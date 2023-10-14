@@ -19,7 +19,7 @@ export const App = () => {
   const [curOffice, setCurOffice] = useState<null | IOffice>(null);
   const [curRoute, setCurRoute] = useState<null | IRoute>(null);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const handleClick = () => {
       setCurAtm(null);
       setCurOffice(null);
@@ -28,7 +28,7 @@ export const App = () => {
     document.addEventListener("click", handleClick);
 
     return () => document.removeEventListener("click", handleClick);
-  }, []);
+  }, []); */
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
