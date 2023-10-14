@@ -37,3 +37,16 @@ export interface IOffice {
   myBranch: boolean;
   load: { days: TDay; loads: number[] }[];
 }
+
+export interface IPos {
+  lat: number;
+  lng: number
+}
+
+export interface Route {
+  nodes: [number, number][]
+  duration: number
+  distance: number
+}
+
+export type TProfiles = "car" | "bike" | "foot"
