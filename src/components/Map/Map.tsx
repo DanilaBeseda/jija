@@ -1,9 +1,16 @@
 import { icon } from "leaflet";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  CircleMarker,
+} from "react-leaflet";
 import { useEffect, useState } from "react";
 import "./leaflet.css";
 import { api } from "../../api";
 import { IAtm, IOffice } from "../../types";
+import MarkerClusterGroup from "react-leaflet-cluster";
 
 interface iCoordsProps {
   coords: [number, number];
@@ -48,30 +55,14 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
         </Popup>
       </Marker>
 
-      {offices.map((office, index) => (
-        <Marker
-          key={index}
-          eventHandlers={{ click: () => onOfficeClick(office) }}
-          position={[office.latitude, office.longitude]}
-          icon={icon({ iconUrl: "/public/bank_icon.svg" })}
-        >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      ))}
-      {atms.map((atm, index) => (
-        <Marker
-          key={index}
-          eventHandlers={{ click: () => onAtmClick(atm) }}
-          position={[atm.latitude, atm.longitude]}
-          icon={icon({ iconUrl: "/public/bank_icon.svg" })}
-        >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      ))}
+      <MarkerClusterGroup>
+        {atms?.map((atm) => (
+          <CircleMarker center={[atm.latitude, atm.longitude]} />
+        ))}
+        {offices?.map((office) => (
+          <CircleMarker center={[office.latitude, office.longitude]} />
+        ))}
+      </MarkerClusterGroup>
     </MapContainer>
   );
 };
