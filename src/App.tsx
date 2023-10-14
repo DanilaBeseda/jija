@@ -69,10 +69,12 @@ export const App = () => {
 
   const handleAtmClick = (atm: IAtm) => {
     setCurAtm(atm);
+    setCurBank(null)
   };
 
   const handleBankClick = (bank: IBank) => {
     setCurBank(bank);
+    setCurAtm(null);
   };
 
   const options = {
@@ -108,7 +110,7 @@ export const App = () => {
             onBankClick={handleBankClick}
           />
         )}
-        <Popover />
+        <Popover atm={curAtm} bank={curBank}/>
       </div>
     </ThemeProvider>
   );
