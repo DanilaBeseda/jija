@@ -18,7 +18,7 @@ export interface IAtm {
     supportsRub: { serviceCapability: string; serviceActivity: string };
   };
   load: { day: number; loads: [number, number][] }[];
-  loadIndividuals: { day: number; loads: [number, number][] }[];
+  workHrs: number[]
 }
 
 export interface IOffice {
@@ -39,6 +39,8 @@ export interface IOffice {
   kep: boolean;
   myBranch: boolean;
   load: { day: number; loads: [number, number][] }[];
+  loadIndividuals: { day: number; loads: [number, number][] }[];
+  workHrs: number[]
 }
 
 export interface IPos {
