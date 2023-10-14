@@ -55,3 +55,17 @@ export interface IRoute {
 }
 
 export type TProfiles = "car" | "bike" | "foot"
+
+export interface IRanked {
+  targetType: TTarget
+  target: IOffice | IAtm
+  travelTime: number
+  waitingTime: number
+  summaryTime: number
+}
+
+export interface IRankResult {
+  top: IRanked[]
+  bestTravelTime: IRanked | undefined
+  bestWaitingTime: IRanked | undefined
+}

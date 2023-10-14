@@ -1,4 +1,4 @@
-import {IAtm, IOffice, IPos, IRoute, TPerson, TProfiles, TTarget} from "./types.ts";
+import {IAtm, IOffice, IPos, IRanked, IRankResult, IRoute, TPerson, TProfiles, TTarget} from "./types.ts";
 import {api, api_osm} from "./api.ts";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -26,15 +26,37 @@ function getWaitingTime(arrivalTime: Date, target: IOffice | IAtm, targetType: T
     return predictLoad
 }
 
-export const rank = async (time: Date, pos: IPos, targetType: TTarget, personType: TPerson, profile: TProfiles) => {
+export const rank = async (time: Date, pos: IPos, targetType: TTarget, personType: TPerson, profile: TProfiles): Promise<IRankResult> => {
     const nearestTargets = targetType == 'office' ? await api.getOfficesNearest(pos) : await api.getAtmsNearest(pos)
     nearestTargets.filter(() => true)
+    let rankedTargets: IRanked[] = []
+    let bestTravelTimeRanked: IRanked | undefined = undefined
+    let bestWaitingTimeRanked: IRanked | undefined = undefined
     for (const target of nearestTargets) {
         const targetPos: IPos = {lat: target.latitude, lng: target.longitude}
         const route: IRoute = await api_osm.buildRoute(pos, targetPos, profile);
         const travelTime = route.duration * 60_000;
         const arrivalTime = new Date(time.getTime() + travelTime)
         const waitingTime = getWaitingTime(arrivalTime, target, targetType, personType)
-
+        if (waitingTime == null) continue
+        const summaryTime = travelTime + waitingTime
+        const ranked = {travelTime, waitingTime, summaryTime, targetType, target}
+        if (!bestTravelTimeRanked) {
+            bestTravelTimeRanked = ranked
+        } else {
+            if (bestTravelTimeRanked.waitingTime > waitingTime) {
+                bestTravelTimeRanked = ranked
+            }
+        }
+        if (!bestWaitingTimeRanked) {
+            bestWaitingTimeRanked = ranked
+        } else {
+            if (bestWaitingTimeRanked.waitingTime > waitingTime) {
+                bestWaitingTimeRanked = ranked
+            }
+        }
+        rankedTargets.push(ranked)
     }
+    rankedTargets = rankedTargets.sort((a, b) => a.summaryTime - b.summaryTime)
+    return {top: rankedTargets, bestTravelTime: bestWaitingTimeRanked, bestWaitingTime: bestWaitingTimeRanked}
 }
