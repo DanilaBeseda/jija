@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
 import { IAtm, IOffice } from "./types.ts";
+import { LeafletMouseEvent } from "leaflet";
 
 const theme = createTheme({
   palette: {},
@@ -17,6 +18,17 @@ export const App = () => {
   const [curOffice, setCurOffice] = useState<null | IOffice>(null);
 
   useEffect(() => {
+    const handleClick = () => {
+      setCurAtm(null);
+      setCurOffice(null);
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => document.removeEventListener("click", handleClick);
+  }, []);
+
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => success(pos),
       error,
@@ -24,14 +36,14 @@ export const App = () => {
     );
   }, []);
 
-  const handleAtmClick = (atm: IAtm) => {
-    console.log(atm);
-
+  const handleAtmClick = (e: LeafletMouseEvent, atm: IAtm) => {
+    e.originalEvent.stopPropagation();
     setCurAtm(atm);
     setCurOffice(null);
   };
 
-  const handleOfficeClick = (bank: IOffice) => {
+  const handleOfficeClick = (e: LeafletMouseEvent, bank: IOffice) => {
+    e.originalEvent.stopPropagation();
     setCurOffice(bank);
     setCurAtm(null);
   };
@@ -61,7 +73,7 @@ export const App = () => {
             onOfficeClick={handleOfficeClick}
           />
         )}
-        <Popover atm={curAtm} office={curOffice} />
+        {(curAtm || curOffice) && <Popover atm={curAtm} office={curOffice} />}
       </div>
     </ThemeProvider>
   );

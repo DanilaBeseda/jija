@@ -1,11 +1,5 @@
-import { icon } from "leaflet";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  CircleMarker,
-} from "react-leaflet";
+import { LeafletMouseEvent, icon } from "leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { useEffect, useState } from "react";
 import "./leaflet.css";
 import { api } from "../../api";
@@ -14,8 +8,8 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 
 interface iCoordsProps {
   coords: [number, number];
-  onAtmClick: (atm: IAtm) => void;
-  onOfficeClick: (bank: IOffice) => void;
+  onAtmClick: (e: LeafletMouseEvent, atm: IAtm) => void;
+  onOfficeClick: (e: LeafletMouseEvent, bank: IOffice) => void;
 }
 
 export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
@@ -36,8 +30,6 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
     getData();
   }, [getAtms, getOffices]);
 
-  console.log(offices);
-
   return (
     <MapContainer
       center={centerPosition}
@@ -49,23 +41,25 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
       <Marker
         position={centerPosition}
         icon={icon({ iconUrl: "/public/user.svg" })}
-      >
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+      />
 
       <MarkerClusterGroup>
-        {atms?.map((atm) => (
+        {atms?.map((atm, index) => (
           <Marker
-            eventHandlers={{ click: () => onAtmClick(atm) }}
+            key={index}
+            eventHandlers={{
+              click: (e: LeafletMouseEvent) => onAtmClick(e, atm),
+            }}
             icon={icon({ iconUrl: "/public/atm.svg" })}
             position={[atm.latitude, atm.longitude]}
           />
         ))}
-        {offices?.map((office) => (
+        {offices?.map((office, index) => (
           <Marker
-            eventHandlers={{ click: () => onOfficeClick(office) }}
+            key={index}
+            eventHandlers={{
+              click: (e: LeafletMouseEvent) => onOfficeClick(e, office),
+            }}
             icon={icon({ iconUrl: "/public/bank_icon.svg" })}
             position={[office.latitude, office.longitude]}
           />
