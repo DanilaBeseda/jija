@@ -6,6 +6,10 @@ export const api = {
     getAtms: () => axios.get<IAtm[]>(`${HOST}/atms`).then((res) => res.data),
     getOffices: () =>
         axios.get<IOffice[]>(`${HOST}/offices`).then((res) => res.data),
+    getAtmsNearest: (pos: IPos) => axios.get<IAtm[]>(`${HOST}/atms/${pos.lat}/${pos.lng}`).then((res) => res.data),
+    getOfficesNearest: (pos: IPos) =>
+        axios.get<IOffice[]>(`${HOST}/offices/${pos.lat}/${pos.lng}`).then((res) => res.data),
+
 };
 
 export const api_osm = {

@@ -17,7 +17,11 @@ ChartJS.register(
     Title,
     Legend
 );
-
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
+import {useState} from "react";
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface IPopoverProps {
   atm: IAtm | null;
@@ -29,11 +33,13 @@ interface IBarProps {
 }
 
 interface IWorkHoursProps {
+  title: string
   data: {days: string, hours: string}[]
 }
 
 
 const BarChart = ({load}: IBarProps) => {
+  console.log(load)
   // @ts-ignore
   const labels = load[0].loads.map((hour => hour[0]));
 
@@ -44,7 +50,7 @@ const BarChart = ({load}: IBarProps) => {
       {
         label: 'load',
         data: load[0].loads.map((hour => hour[1])),
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: 'red',
       },
     ],
   };
@@ -54,12 +60,14 @@ const BarChart = ({load}: IBarProps) => {
   return <Bar  options={options} data={data} id = "chart"/>
 }
 
-const WorkFours = ({data}:IWorkHoursProps) => {
-  return <div className={'popoverWorkHoursDiv'}>
-    <p className={'text'}>
-      Режим Работы:
-    </p>
-    {
+const WorkFours = ({title, data}:IWorkHoursProps) => {
+  const [open, setOpen] = useState(false)
+  return <div className={'popoverWorkHoursDiv'} onClick={() => {setOpen(!open)}}>
+    <div className={'popoverWorkHoursTitle'}>
+      {title}
+      {open ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+    </div>
+    {open &&
       data.map((day =>
         <p className={'text popoverWorkHoursLabel'} key={day.days}>
         {`${day.days}: ${day.hours}`}
@@ -87,14 +95,16 @@ const ATMService = () => {
 export const PopoverOffice =  ({office}: { office: IOffice }) => {
   return(
       <div className="popover">
+        <SimpleBar style={{ maxHeight: '100%' }}>
         <p className={'popoverName'}>{office?.salePointName}</p>
         <img src={"public/Dep.jpg"} className={"photo"}  alt=''/>
         <p className={'popoverAddress'}>{`${office?.address}(${office?.metroStation})`}</p>
         <div className={'divider'}/>
-        {office?.openHoursIndividual && <WorkFours data={office.openHoursIndividual}/>}
+        {office?.openHoursIndividual && <WorkFours title={'Режим работы для физ. лиц'} data={office.openHoursIndividual}/>}
         {office?.load && <BarChart load={office?.load}/>}
         <div className={'divider'}/>
         <OfficeService/>
+        </SimpleBar>
       </div>
   )
 }

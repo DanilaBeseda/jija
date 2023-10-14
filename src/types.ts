@@ -1,4 +1,6 @@
 export type TDay = "пн" | "вт" | "ср" | "чт" | "пт" | "сб" | "вс";
+export type TPerson = 'individual' | 'legal'
+export type TTarget = 'atm' | 'office'
 
 export interface IAtm {
   address: string;
@@ -15,7 +17,8 @@ export interface IAtm {
     supportsEur: { serviceCapability: string; serviceActivity: string };
     supportsRub: { serviceCapability: string; serviceActivity: string };
   };
-  load: { days: number; loads: number[][] }[];
+  load: { day: number; loads: [number, number][] }[];
+  loadIndividuals: { day: number; loads: [number, number][] }[];
 }
 
 export interface IOffice {
@@ -35,7 +38,7 @@ export interface IOffice {
   distance: number;
   kep: boolean;
   myBranch: boolean;
-  load: { days: number; loads: number[][] }[];
+  load: { day: number; loads: [number, number][] }[];
 }
 
 export interface IPos {
