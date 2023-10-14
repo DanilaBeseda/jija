@@ -1,18 +1,68 @@
-import { IAtm, IOffice } from "../../types";
+import {IAtm, IOffice} from "../../types";
 import "./Popover.css";
 import { Tooltip } from "@mui/material";
+import { Bar } from 'react-chartjs-2';
 
 interface IPopoverProps {
   atm: IAtm | null;
   office: IOffice | null;
 }
-export const Popover = ({ atm, office }: IPopoverProps) => {
+
+interface IBarProps {
+  load: {days: number, loads: number[][]}[]
+}
+
+interface IWorkHoursProps {
+  data: {days: string, hours: string}[]
+}
+
+
+const BarChart = ({load}: IBarProps) => {
+  // @ts-ignore
+  const labels = load[0].loads.map((hour => hour[0]));
+
+  // @ts-ignore
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'load',
+        data: load[0].loads.map((hour => hour[1])),
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+    ],
+  };
+  const options = {
+    responsive: true,
+  };
+  return <Bar options={options} data={data} id = "chart"/>
+}
+
+const WorkFours = ({data}:IWorkHoursProps) => {
+  return <div className={'popoverWorkHoursDiv'}>
+    <p className={'text'}>
+      Режим Работы:
+    </p>
+    {
+      data.map((day =>
+        <p className={'text popoverWorkHoursLabel'} key={day.days}>
+        {`${day.days}: ${day.hours}`}
+        </p>
+      ))
+    }
+  </div>
+}
+
+export const Popover = ({ office, atm }: IPopoverProps) => {
   return (
     <div className="popover">
-      <div className={"blockPhoto"}>
-        {atm && <img src={"public/ATM-photo.jpg"} className={"photo"} />}
-        {office && <img src={"public/Dep.jpg"} className={"photo"} />}
-      </div>
+      <p className={'popoverName'}>{office?.salePointName}</p>
+      <img src={"public/Dep.jpg"} className={"photo"}  alt=''/>
+      <p className={'popoverAddress'}>{`${office?.address}(${office?.metroStation})`}</p>
+      <div className={'divider'}/>
+      {office?.openHoursIndividual && <WorkFours data={office.openHoursIndividual}/>}
+      {office?.load && <BarChart load={office?.load}/>}
+      <div className={'divider'}/>
       <div className={"blockInfo"}>
         <div className={"nameStr"}>
           <div>{office && <span>Название:</span>}</div>

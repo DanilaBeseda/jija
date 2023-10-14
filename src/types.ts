@@ -15,7 +15,7 @@ export interface IAtm {
     supportsEur: { serviceCapability: string; serviceActivity: string };
     supportsRub: { serviceCapability: string; serviceActivity: string };
   };
-  load: { days: TDay; loads: number[] }[];
+  load: { days: number; loads: number[][] }[];
 }
 
 export interface IOffice {
@@ -35,7 +35,7 @@ export interface IOffice {
   distance: number;
   kep: boolean;
   myBranch: boolean;
-  load: { days: TDay; loads: number[] }[];
+  load: { days: number; loads: number[][] }[];
 }
 
 export interface IPos {
