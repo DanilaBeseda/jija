@@ -82,12 +82,7 @@ export const App = () => {
   };
 
   function success(pos: GeolocationPosition) {
-    // console.log(pos.coords);
     setCoords([pos.coords.latitude, pos.coords.longitude]);
-    // console.log("Your current position is:");
-    // console.log(`Latitude : ${pos.coords.latitude}`);
-    // console.log(`Longitude: ${pos.coords.longitude}`);
-    // console.log(`More or less meters.`);
   }
 
   function error() {
