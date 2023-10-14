@@ -1,0 +1,10 @@
+.popover {
+  position: fixed;
+  z-index: 9999999;
+  top: 84px;
+  right: 20px;
+  bottom: 20px;
+  background-color: rgb(26, 30, 35);
+  width: 375px;
+  border-radius: 10px;
+}

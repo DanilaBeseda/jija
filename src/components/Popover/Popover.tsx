@@ -1,3 +1,5 @@
+import "./Popover.css";
+
 export const Popover = () => {
-  return <div>Popover</div>;
+  return <div className="popover"></div>;
 };
