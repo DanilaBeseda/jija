@@ -1,5 +1,5 @@
 import axios from "axios";
-import {IAtm, IOffice, IPos, Route, TProfiles} from "./types";
+import {IAtm, IOffice, IPos, IRoute, TProfiles} from "./types";
 import {HOST} from "./config";
 
 export const api = {
@@ -9,7 +9,7 @@ export const api = {
 };
 
 export const api_osm = {
-    buildRoute: (startPos: IPos, dstPos: IPos, profile: TProfiles): Promise<Route> => {
+    buildRoute: (startPos: IPos, dstPos: IPos, profile: TProfiles): Promise<IRoute> => {
         return axios.get(`http://router.project-osrm.org/route/v1/${profile}/${startPos.lng},${startPos.lat};${dstPos.lng},${dstPos.lat}` +
             '?' +
             'steps=true' +

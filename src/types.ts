@@ -43,7 +43,7 @@ export interface IPos {
   lng: number
 }
 
-export interface Route {
+export interface IRoute {
   nodes: [number, number][]
   duration: number
   distance: number

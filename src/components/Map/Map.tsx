@@ -1,18 +1,19 @@
 import { LeafletMouseEvent, icon } from "leaflet";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import {MapContainer, TileLayer, Marker, Polyline} from "react-leaflet";
 import { useEffect, useState } from "react";
 import "./leaflet.css";
 import { api } from "../../api";
-import { IAtm, IOffice } from "../../types";
+import {IAtm, IOffice, IRoute} from "../../types";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 interface iCoordsProps {
   coords: [number, number];
   onAtmClick: (e: LeafletMouseEvent, atm: IAtm) => void;
   onOfficeClick: (e: LeafletMouseEvent, bank: IOffice) => void;
+  curRoute: IRoute | null;
 }
 
-export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
+export const Map = ({ coords, onAtmClick, onOfficeClick, curRoute }: iCoordsProps) => {
   const [atms, setAtms] = useState<IAtm[]>([]);
   const [offices, setOffices] = useState<IOffice[]>([]);
   const { getAtms, getOffices } = api;
@@ -64,6 +65,8 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
             position={[office.latitude, office.longitude]}
           />
         ))}
+        {curRoute && <Polyline positions={curRoute.nodes}></Polyline>}
+
       </MarkerClusterGroup>
     </MapContainer>
   );
