@@ -29,7 +29,7 @@ export const App = () => {
     setCurBank(null);
   };
 
-  const handleBankClick = (bank: IOffice) => {
+  const handleOfficeClick = (bank: IOffice) => {
     setCurBank(bank);
     setCurAtm(null);
   };
@@ -56,7 +56,7 @@ export const App = () => {
           <Map
             coords={coords}
             onAtmClick={handleAtmClick}
-            onBankClick={handleBankClick}
+            onOfficeClick={handleOfficeClick}
           />
         )}
         <Popover atm={curAtm} bank={curBank} />

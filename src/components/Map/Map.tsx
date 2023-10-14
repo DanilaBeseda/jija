@@ -8,10 +8,10 @@ import { IAtm, IOffice } from "../../types";
 interface iCoordsProps {
   coords: [number, number];
   onAtmClick: (atm: IAtm) => void;
-  onBankClick: (bank: IOffice) => void;
+  onOfficeClick: (bank: IOffice) => void;
 }
 
-export const Map = ({ coords, onAtmClick, onBankClick }: iCoordsProps) => {
+export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
   const [atms, setAtms] = useState<IAtm[]>([]);
   const [offices, setOffices] = useState<IOffice[]>([]);
   const { getAtms, getOffices } = api;
@@ -51,7 +51,19 @@ export const Map = ({ coords, onAtmClick, onBankClick }: iCoordsProps) => {
       {offices.map((office, index) => (
         <Marker
           key={index}
-          eventHandlers={{ click: () => onBankClick(office) }}
+          eventHandlers={{ click: () => onOfficeClick(office) }}
+          position={centerPosition}
+          icon={icon({ iconUrl: "/public/bank_icon.svg" })}
+        >
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+      ))}
+      {atms.map((atm, index) => (
+        <Marker
+          key={index}
+          eventHandlers={{ click: () => onAtmClick(atm) }}
           position={centerPosition}
           icon={icon({ iconUrl: "/public/bank_icon.svg" })}
         >
