@@ -12,9 +12,9 @@ const theme = createTheme({
 });
 
 export const App = () => {
-  const [coords, setCoords] = useState<[number, number]>([55.754121, 37.62066]);
+  const [coords, setCoords] = useState<[number, number]>([0, 0]);
   const [curAtm, setCurAtm] = useState<null | IAtm>(null);
-  const [curBank, setCurBank] = useState<null | IOffice>(null);
+  const [curOffice, setCurOffice] = useState<null | IOffice>(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -26,11 +26,11 @@ export const App = () => {
 
   const handleAtmClick = (atm: IAtm) => {
     setCurAtm(atm);
-    setCurBank(null);
+    setCurOffice(null);
   };
 
   const handleOfficeClick = (bank: IOffice) => {
-    setCurBank(bank);
+    setCurOffice(bank);
     setCurAtm(null);
   };
 
@@ -59,7 +59,7 @@ export const App = () => {
             onOfficeClick={handleOfficeClick}
           />
         )}
-        <Popover atm={curAtm} bank={curBank} />
+        <Popover atm={curAtm} office={curOffice} />
       </div>
     </ThemeProvider>
   );

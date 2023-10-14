@@ -41,7 +41,7 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker
         position={centerPosition}
-        icon={icon({ iconUrl: "/public/bank_icon.svg" })}
+        icon={icon({ iconUrl: "/public/user.svg" })}
       >
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
@@ -52,7 +52,7 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
         <Marker
           key={index}
           eventHandlers={{ click: () => onOfficeClick(office) }}
-          position={centerPosition}
+          position={[office.latitude, office.longitude]}
           icon={icon({ iconUrl: "/public/bank_icon.svg" })}
         >
           <Popup>
@@ -64,7 +64,7 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
         <Marker
           key={index}
           eventHandlers={{ click: () => onAtmClick(atm) }}
-          position={centerPosition}
+          position={[atm.latitude, atm.longitude]}
           icon={icon({ iconUrl: "/public/bank_icon.svg" })}
         >
           <Popup>

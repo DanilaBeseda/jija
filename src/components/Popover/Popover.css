@@ -23,3 +23,20 @@
   width: 100%;
   height: 100%;
 }
+
+.blockInfo {
+  display: flex;
+  color: aliceblue;
+}
+
+.nameStr {
+  width: 50%;
+}
+
+.valueStr {
+  width: 50%;
+}
+
+.copyBlock {
+  cursor: pointer;
+}
