@@ -2,6 +2,22 @@ import {IAtm, IOffice} from "../../types";
 import "./Popover.css";
 import { Tooltip } from "@mui/material";
 import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Legend,
+} from 'chart.js';
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Legend
+);
+
 
 interface IPopoverProps {
   atm: IAtm | null;
@@ -35,7 +51,7 @@ const BarChart = ({load}: IBarProps) => {
   const options = {
     responsive: true,
   };
-  return <Bar options={options} data={data} id = "chart"/>
+  return <Bar  options={options} data={data} id = "chart"/>
 }
 
 const WorkFours = ({data}:IWorkHoursProps) => {
@@ -53,7 +69,38 @@ const WorkFours = ({data}:IWorkHoursProps) => {
   </div>
 }
 
+const OfficeService = () => {
+  return <p className={'text'}>
+    открытие и закрытие счетов, переводы денежных средств, выдачу кредитов и займов, пополнение депозитов, обмен валюты, выпуск и использование банковских карт, платежи через интернет-банкинг и многое другое.
+  </p>
+}
+
+const ATMService = () => {
+  return <p className={'text'}>
+    снять наличные с банковской карты
+    оплатить мобильный телефон,
+    запросить баланс или выписку по последним операциям,
+    перевести средства с карты на карту.
+  </p>
+}
+
+export const PopoverOffice =  ({office}: { office: IOffice }) => {
+  return(
+      <div className="popover">
+        <p className={'popoverName'}>{office?.salePointName}</p>
+        <img src={"public/Dep.jpg"} className={"photo"}  alt=''/>
+        <p className={'popoverAddress'}>{`${office?.address}(${office?.metroStation})`}</p>
+        <div className={'divider'}/>
+        {office?.openHoursIndividual && <WorkFours data={office.openHoursIndividual}/>}
+        {office?.load && <BarChart load={office?.load}/>}
+        <div className={'divider'}/>
+        <OfficeService/>
+      </div>
+  )
+}
+
 export const Popover = ({ office, atm }: IPopoverProps) => {
+  if (office) return (<PopoverOffice office={office}/>)
   return (
     <div className="popover">
       <p className={'popoverName'}>{office?.salePointName}</p>
@@ -63,6 +110,7 @@ export const Popover = ({ office, atm }: IPopoverProps) => {
       {office?.openHoursIndividual && <WorkFours data={office.openHoursIndividual}/>}
       {office?.load && <BarChart load={office?.load}/>}
       <div className={'divider'}/>
+      <OfficeService/>
       <div className={"blockInfo"}>
         <div className={"nameStr"}>
           <div>{office && <span>Название:</span>}</div>
