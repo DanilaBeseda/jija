@@ -1,25 +1,16 @@
-import { LatLngExpression } from "leaflet";
+import { LatLngExpression, LeafletMouseEvent, icon } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import "./leaflet.css";
 
 interface iCoordsProps {
-  long: number,
-  lat: number
-
+  coords: [number, number];
+  onClick: (e: LeafletMouseEvent) => void;
 }
 
+export const Map = ({ coords, onClick }: iCoordsProps) => {
+  const centerPosition: LatLngExpression = [coords[0], coords[1]];
 
-const positions: LatLngExpression[] = [
-  [55.75222, 37.61556],
-  [55.74222, 37.61556],
-  [55.73222, 37.61556],
-  [55.72222, 37.61556],
-];
-
-export const Map = ({lat, long}:iCoordsProps) => {
-  console.log(lat, long)
-  const centerPosition: LatLngExpression = [lat, long];
   return (
     <MapContainer
       center={centerPosition}
@@ -28,13 +19,15 @@ export const Map = ({lat, long}:iCoordsProps) => {
       style={{ width: "100vw", height: "100vh" }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {positions.map((position) => (
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      ))}
+      <Marker
+        eventHandlers={{ click: onClick }}
+        position={centerPosition}
+        icon={icon({ iconUrl: "/public/bank_icon.svg" })}
+      >
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
     </MapContainer>
   );
 };
