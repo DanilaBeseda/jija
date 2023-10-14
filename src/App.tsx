@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
 
+type TDay = "пн" | "вт" | "ср" | "чт" | "пт" | "сб" | "вс";
+
 export interface IAtm {
   address: string;
   latitude: number;
@@ -21,41 +23,27 @@ export interface IAtm {
     supportsEur: { serviceCapability: string; serviceActivity: string };
     supportsRub: { serviceCapability: string; serviceActivity: string };
   };
-  load: {
-    Пн: number;
-    Вт: number;
-    Ср: number;
-    Чт: number;
-    Пт: number;
-    Сб: number;
-    Вс: number;
-  };
+  load: { days: TDay; loads: number[] }[];
 }
 
 export interface IBank {
-  address: string;
+  salePointName: string;
+  address: number;
+  status: number;
+  openHours: { days: TDay; hours: string }[];
+  rko: string;
+  openHoursIndividual: { days: TDay; hours: string }[];
+  officeType: string;
+  salePointFormat: string;
+  suoAvailability: string;
+  hasRamp: string;
   latitude: number;
   longitude: number;
-  allDay: boolean;
-  services: {
-    wheelchair: { serviceCapability: string; serviceActivity: string };
-    blind: { serviceCapability: string; serviceActivity: string };
-    nfcForBankCards: { serviceCapability: string; serviceActivity: string };
-    qrRead: { serviceCapability: string; serviceActivity: string };
-    supportsUsd: { serviceCapability: string; serviceActivity: string };
-    supportsChargeRub: { serviceCapability: string; serviceActivity: string };
-    supportsEur: { serviceCapability: string; serviceActivity: string };
-    supportsRub: { serviceCapability: string; serviceActivity: string };
-  };
-  load: {
-    Пн: number;
-    Вт: number;
-    Ср: number;
-    Чт: number;
-    Пт: number;
-    Сб: number;
-    Вс: number;
-  };
+  metroStation: string;
+  distance: number;
+  kep: boolean;
+  myBranch: boolean;
+  load: { days: TDay; loads: number[] }[];
 }
 
 const theme = createTheme({
@@ -69,7 +57,7 @@ export const App = () => {
 
   const handleAtmClick = (atm: IAtm) => {
     setCurAtm(atm);
-    setCurBank(null)
+    setCurBank(null);
   };
 
   const handleBankClick = (bank: IBank) => {
@@ -110,7 +98,7 @@ export const App = () => {
             onBankClick={handleBankClick}
           />
         )}
-        <Popover atm={curAtm} bank={curBank}/>
+        <Popover atm={curAtm} bank={curBank} />
       </div>
     </ThemeProvider>
   );
