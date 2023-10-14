@@ -40,6 +40,7 @@
   display: flex;
   align-items: center;
   flex-direction: row;
+  cursor: pointer;
 }
 
 .popoverWorkHoursLabel {
@@ -60,19 +61,22 @@
   height: 100%;
 }
 
-.blockInfo {
+.userTypeContainer {
   display: flex;
-  color: aliceblue;
+  flex-direction: row;
+  width: 100%;
 }
 
-.nameStr {
+.userTypeButton {
   width: 50%;
-}
-
-.valueStr {
-  width: 50%;
-}
-
-.copyBlock {
+  background: #6b6b6b;
   cursor: pointer;
+  color: #cecece;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.userTypeButtonActive {
+  background: #41416e;
 }

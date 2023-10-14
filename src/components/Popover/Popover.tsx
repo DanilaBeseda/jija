@@ -22,6 +22,8 @@ import 'simplebar-react/dist/simplebar.min.css';
 import {useState} from "react";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import cn from 'classnames'
+
 
 interface IPopoverProps {
   atm: IAtm | null;
@@ -29,6 +31,7 @@ interface IPopoverProps {
 }
 
 interface IBarProps {
+  title: string
   load: {days: number, loads: number[][]}[]
 }
 
@@ -37,8 +40,27 @@ interface IWorkHoursProps {
   data: {days: string, hours: string}[]
 }
 
+interface IUserTypeButtonProps {
+  individual: boolean,
+  setIndividual: (individual: boolean) => void
+}
 
-const BarChart = ({load}: IBarProps) => {
+const UserTypeButton = ({individual, setIndividual}: IUserTypeButtonProps  ) => {
+  return (<div className={'userTypeContainer'}>
+    <div className={cn('userTypeButton', individual && 'userTypeButtonActive')} onClick={() => {
+      setIndividual(true)
+    }}>
+      Для физ. лиц
+    </div>
+    <div className={cn('userTypeButton', !individual && 'userTypeButtonActive')} onClick={() => {
+      setIndividual(false)
+    }}>
+      Для юр. лиц
+    </div>
+  </div>)
+}
+
+const BarChart = ({title, load}: IBarProps) => {
   console.log(load)
   // @ts-ignore
   const labels = load[0].loads.map((hour => hour[0]));
@@ -48,28 +70,26 @@ const BarChart = ({load}: IBarProps) => {
     labels,
     datasets: [
       {
-        label: 'load',
+        label: title,
         data: load[0].loads.map((hour => hour[1])),
         backgroundColor: 'red',
       },
     ],
   };
-  const options = {
-    responsive: true,
-  };
-  return <Bar  options={options} data={data} id = "chart"/>
+
+  return <Bar data={data} id = "chart"/>
 }
 
 const WorkFours = ({title, data}:IWorkHoursProps) => {
   const [open, setOpen] = useState(false)
   return <div className={'popoverWorkHoursDiv'} onClick={() => {setOpen(!open)}}>
-    <div className={'popoverWorkHoursTitle'}>
+    <div className={'text popoverWorkHoursTitle'}>
       {title}
       {open ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
     </div>
     {open &&
       data.map((day =>
-        <p className={'text popoverWorkHoursLabel'} key={day.days}>
+        <p className={'text popoverWorkHoursLabel'} key={day.days} onClick={e => e.stopPropagation()}>
         {`${day.days}: ${day.hours}`}
         </p>
       ))
@@ -93,15 +113,24 @@ const ATMService = () => {
 }
 
 export const PopoverOffice =  ({office}: { office: IOffice }) => {
+  const [individual, setIndividual] = useState(true)
   return(
       <div className="popover">
         <SimpleBar style={{ maxHeight: '100%' }}>
         <p className={'popoverName'}>{office?.salePointName}</p>
         <img src={"public/Dep.jpg"} className={"photo"}  alt=''/>
-        <p className={'popoverAddress'}>{`${office?.address}(${office?.metroStation})`}</p>
+        <p className={'popoverAddress'}>{`${office?.address} (${office?.metroStation})`}</p>
         <div className={'divider'}/>
-        {office?.openHoursIndividual && <WorkFours title={'Режим работы для физ. лиц'} data={office.openHoursIndividual}/>}
-        {office?.load && <BarChart load={office?.load}/>}
+          { office.openHours[0].days !== 'Не обслуживает ЮЛ' && <UserTypeButton individual={individual} setIndividual={setIndividual} />}
+          {individual ?
+              office?.openHoursIndividual && <WorkFours title={'Режим работы для физ. лиц'} data={office.openHoursIndividual}/>
+          : office?.openHours && <WorkFours title={'Режим работы для юр. лиц'} data={office.openHours}/>
+          }
+          {individual ?
+              office?.load && <BarChart title={'Загруженность отделения для юр. лиц'} load={office?.load}/>
+             : office?.load && <BarChart title={'Загруженность отделения для юр. лиц'} load={office?.load}/>
+          }
+        {}
         <div className={'divider'}/>
         <OfficeService/>
         </SimpleBar>
@@ -109,8 +138,26 @@ export const PopoverOffice =  ({office}: { office: IOffice }) => {
   )
 }
 
+export const PopoverATM = ({atm}: { atm: IAtm }) => {
+  return(
+      <div className="popover">
+        <SimpleBar style={{ maxHeight: '100%' }}>
+          <p className={'popoverName'}>Банкомат</p>
+          <img src={"public/ATM-photo.jpg"} className={"photo"}  alt=''/>
+          <p className={'popoverAddress'}>{atm?.address}</p>
+          <div className={'divider'}/>
+             {atm?.load && <BarChart title = 'Загруженность банкомата' load={atm?.load}/>}
+          <div className={'divider'}/>
+          <OfficeService/>
+        </SimpleBar>
+      </div>
+  )
+}
+
 export const Popover = ({ office, atm }: IPopoverProps) => {
   if (office) return (<PopoverOffice office={office}/>)
+  if (atm) return (<PopoverATM atm={atm}/>)
+  return null
   return (
     <div className="popover">
       <p className={'popoverName'}>{office?.salePointName}</p>
