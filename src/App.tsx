@@ -19,17 +19,17 @@ export const App = () => {
   };
 
   function success(pos: GeolocationPosition) {
-    console.log(pos.coords);
+    // console.log(pos.coords);
     setLat(pos.coords.latitude);
     setLong(pos.coords.longitude);
-    console.log("Your current position is:");
-    console.log(`Latitude : ${pos.coords.latitude}`);
-    console.log(`Longitude: ${pos.coords.longitude}`);
-    console.log(`More or less meters.`);
+    // console.log("Your current position is:");
+    // console.log(`Latitude : ${pos.coords.latitude}`);
+    // console.log(`Longitude: ${pos.coords.longitude}`);
+    // console.log(`More or less meters.`);
   }
 
   function error() {
-    console.warn(`ERROR`);
+    //console.warn(`ERROR`);
   }
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export const App = () => {
     <ThemeProvider theme={theme}>
       <div className="app">
         <Header lat={lat} long={long} />
-        <Map />
+        {lat != 0 && long != 0 && <Map lat={lat} long={long}/>}
       </div>
     </ThemeProvider>
   );

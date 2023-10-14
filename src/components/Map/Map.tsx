@@ -3,7 +3,13 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import "./leaflet.css";
 
-const centerPosition: LatLngExpression = [55.74222, 37.61556];
+interface iCoordsProps {
+  long: number,
+  lat: number
+
+}
+
+
 const positions: LatLngExpression[] = [
   [55.75222, 37.61556],
   [55.74222, 37.61556],
@@ -11,7 +17,9 @@ const positions: LatLngExpression[] = [
   [55.72222, 37.61556],
 ];
 
-export const Map = () => {
+export const Map = ({lat, long}:iCoordsProps) => {
+  console.log(lat, long)
+  const centerPosition: LatLngExpression = [lat, long];
   return (
     <MapContainer
       center={centerPosition}

@@ -3,8 +3,8 @@ import './Header.css'
 interface iCoordsProps {
     long: number,
     lat: number
-
 }
+
 const Header = ({long, lat}:iCoordsProps) => {
     return (
         <div className={'mainHeader'}>
