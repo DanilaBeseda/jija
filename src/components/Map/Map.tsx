@@ -1,11 +1,12 @@
-import { LeafletMouseEvent, icon } from "leaflet";
+import { icon } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import "./leaflet.css";
+import { IDepInfo } from "../../App";
 
 interface iCoordsProps {
   coords: [number, number];
-  onClick: (e: LeafletMouseEvent) => void;
+  onClick: (depInfo: IDepInfo) => void;
 }
 
 export const Map = ({ coords, onClick }: iCoordsProps) => {
@@ -20,7 +21,7 @@ export const Map = ({ coords, onClick }: iCoordsProps) => {
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker
-        eventHandlers={{ click: onClick }}
+        eventHandlers={{ click: () => onClick(depInfo) }}
         position={centerPosition}
         icon={icon({ iconUrl: "/public/bank_icon.svg" })}
       >

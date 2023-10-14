@@ -5,7 +5,10 @@ import Header from "./components/Header/Header.tsx";
 import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
-import { LeafletMouseEvent } from "leaflet";
+
+export interface IDepInfo {
+  //
+}
 
 const theme = createTheme({
   palette: {},
@@ -15,9 +18,8 @@ export const App = () => {
   const [coords, setCoords] = useState<[number, number]>([0, 0]);
   const [curDep, setCurDep] = useState<null>(null);
 
-  const handleClickDep = (e: LeafletMouseEvent) => {
-    console.log(e);
-    // setCurDep(dep);
+  const handleClickDep = (depInfo: IDepInfo) => {
+    // setCurDep(depInfo);
   };
 
   const options = {
