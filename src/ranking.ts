@@ -7,7 +7,7 @@ const isOffice = (targetType: TTarget, target: IOffice | IAtm): target is IOffic
     return targetType === 'office'
 }
 
-function getWaitingTime(arrivalTime: Date, target: IOffice | IAtm, targetType: TTarget, person: TPerson): number | null {
+export function getWaitingTime(arrivalTime: Date, target: IOffice | IAtm, targetType: TTarget, person: TPerson): number | null {
     const weekDay = arrivalTime.getDay() == 0 ? 7 : arrivalTime.getDay()
     let load: { day: number; loads: [number, number][] }[]
     if (isOffice(targetType, target)) {
