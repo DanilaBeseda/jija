@@ -2,14 +2,15 @@ import { icon } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import "./leaflet.css";
-import { IDepInfo } from "../../App";
+import { IAtm, IBank } from "../../App";
 
 interface iCoordsProps {
   coords: [number, number];
-  onClick: (depInfo: IDepInfo) => void;
+  onAtmClick: (atm: IAtm) => void;
+  onBankClick: (bank: IBank) => void;
 }
 
-export const Map = ({ coords, onClick }: iCoordsProps) => {
+export const Map = ({ coords, onAtmClick, onBankClick }: iCoordsProps) => {
   const centerPosition = coords;
 
   return (
@@ -21,7 +22,17 @@ export const Map = ({ coords, onClick }: iCoordsProps) => {
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker
-        eventHandlers={{ click: () => onClick(depInfo) }}
+        eventHandlers={{ click: () => onAtmClick(atm) }}
+        position={centerPosition}
+        icon={icon({ iconUrl: "/public/bank_icon.svg" })}
+      >
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+
+      <Marker
+        eventHandlers={{ click: () => onBankClick(bank) }}
         position={centerPosition}
         icon={icon({ iconUrl: "/public/bank_icon.svg" })}
       >

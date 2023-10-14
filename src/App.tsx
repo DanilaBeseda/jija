@@ -6,8 +6,56 @@ import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
 
-export interface IDepInfo {
-  //
+export interface IAtm {
+  address: string;
+  latitude: number;
+  longitude: number;
+  allDay: boolean;
+  services: {
+    wheelchair: { serviceCapability: string; serviceActivity: string };
+    blind: { serviceCapability: string; serviceActivity: string };
+    nfcForBankCards: { serviceCapability: string; serviceActivity: string };
+    qrRead: { serviceCapability: string; serviceActivity: string };
+    supportsUsd: { serviceCapability: string; serviceActivity: string };
+    supportsChargeRub: { serviceCapability: string; serviceActivity: string };
+    supportsEur: { serviceCapability: string; serviceActivity: string };
+    supportsRub: { serviceCapability: string; serviceActivity: string };
+  };
+  load: {
+    Пн: number;
+    Вт: number;
+    Ср: number;
+    Чт: number;
+    Пт: number;
+    Сб: number;
+    Вс: number;
+  };
+}
+
+export interface IBank {
+  address: string;
+  latitude: number;
+  longitude: number;
+  allDay: boolean;
+  services: {
+    wheelchair: { serviceCapability: string; serviceActivity: string };
+    blind: { serviceCapability: string; serviceActivity: string };
+    nfcForBankCards: { serviceCapability: string; serviceActivity: string };
+    qrRead: { serviceCapability: string; serviceActivity: string };
+    supportsUsd: { serviceCapability: string; serviceActivity: string };
+    supportsChargeRub: { serviceCapability: string; serviceActivity: string };
+    supportsEur: { serviceCapability: string; serviceActivity: string };
+    supportsRub: { serviceCapability: string; serviceActivity: string };
+  };
+  load: {
+    Пн: number;
+    Вт: number;
+    Ср: number;
+    Чт: number;
+    Пт: number;
+    Сб: number;
+    Вс: number;
+  };
 }
 
 const theme = createTheme({
@@ -15,11 +63,16 @@ const theme = createTheme({
 });
 
 export const App = () => {
-  const [coords, setCoords] = useState<[number, number]>([0, 0]);
-  const [curDep, setCurDep] = useState<null>(null);
+  const [coords, setCoords] = useState<[number, number]>([55.754121, 37.62066]);
+  const [curAtm, setCurAtm] = useState<null | IAtm>(null);
+  const [curBank, setCurBank] = useState<null | IBank>(null);
 
-  const handleClickDep = (depInfo: IDepInfo) => {
-    // setCurDep(depInfo);
+  const handleAtmClick = (atm: IAtm) => {
+    setCurAtm(atm);
+  };
+
+  const handleBankClick = (bank: IBank) => {
+    setCurBank(bank);
   };
 
   const options = {
@@ -53,8 +106,14 @@ export const App = () => {
     <ThemeProvider theme={theme}>
       <div className="app">
         <Header coords={coords} />
-        {coords[0] !== 0 && <Map coords={coords} onClick={handleClickDep} />}
-        {curDep && <Popover />}
+        {coords[0] !== 0 && (
+          <Map
+            coords={coords}
+            onAtmClick={handleAtmClick}
+            onBankClick={handleBankClick}
+          />
+        )}
+        <Popover />
       </div>
     </ThemeProvider>
   );
