@@ -57,10 +57,18 @@ export const Map = ({ coords, onAtmClick, onOfficeClick }: iCoordsProps) => {
 
       <MarkerClusterGroup>
         {atms?.map((atm) => (
-          <CircleMarker center={[atm.latitude, atm.longitude]} />
+          <Marker
+            eventHandlers={{ click: () => onAtmClick(atm) }}
+            icon={icon({ iconUrl: "/public/atm.svg" })}
+            position={[atm.latitude, atm.longitude]}
+          />
         ))}
         {offices?.map((office) => (
-          <CircleMarker center={[office.latitude, office.longitude]} />
+          <Marker
+            eventHandlers={{ click: () => onOfficeClick(office) }}
+            icon={icon({ iconUrl: "/public/bank_icon.svg" })}
+            position={[office.latitude, office.longitude]}
+          />
         ))}
       </MarkerClusterGroup>
     </MapContainer>

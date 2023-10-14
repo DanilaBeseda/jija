@@ -25,6 +25,8 @@ export const App = () => {
   }, []);
 
   const handleAtmClick = (atm: IAtm) => {
+    console.log(atm);
+
     setCurAtm(atm);
     setCurOffice(null);
   };
