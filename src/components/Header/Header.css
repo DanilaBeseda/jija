@@ -1,11 +1,12 @@
 .mainHeader {
     width: 100%;
     background-color: blue;
-    height: 100px;
+    height: 64px;
     display: flex;
 }
 
 .Logo {
-    margin: 15px;
-    height: 70px;
+    margin: 19px;
+    margin-left: 50px;
+    height: 25px;
 }
