@@ -5,46 +5,7 @@ import Header from "./components/Header/Header.tsx";
 import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
-
-type TDay = "пн" | "вт" | "ср" | "чт" | "пт" | "сб" | "вс";
-
-export interface IAtm {
-  address: string;
-  latitude: number;
-  longitude: number;
-  allDay: boolean;
-  services: {
-    wheelchair: { serviceCapability: string; serviceActivity: string };
-    blind: { serviceCapability: string; serviceActivity: string };
-    nfcForBankCards: { serviceCapability: string; serviceActivity: string };
-    qrRead: { serviceCapability: string; serviceActivity: string };
-    supportsUsd: { serviceCapability: string; serviceActivity: string };
-    supportsChargeRub: { serviceCapability: string; serviceActivity: string };
-    supportsEur: { serviceCapability: string; serviceActivity: string };
-    supportsRub: { serviceCapability: string; serviceActivity: string };
-  };
-  load: { days: TDay; loads: number[] }[];
-}
-
-export interface IBank {
-  salePointName: string;
-  address: number;
-  status: number;
-  openHours: { days: TDay; hours: string }[];
-  rko: string;
-  openHoursIndividual: { days: TDay; hours: string }[];
-  officeType: string;
-  salePointFormat: string;
-  suoAvailability: string;
-  hasRamp: string;
-  latitude: number;
-  longitude: number;
-  metroStation: string;
-  distance: number;
-  kep: boolean;
-  myBranch: boolean;
-  load: { days: TDay; loads: number[] }[];
-}
+import { IAtm, IOffice } from "./types.ts";
 
 const theme = createTheme({
   palette: {},
@@ -53,14 +14,22 @@ const theme = createTheme({
 export const App = () => {
   const [coords, setCoords] = useState<[number, number]>([55.754121, 37.62066]);
   const [curAtm, setCurAtm] = useState<null | IAtm>(null);
-  const [curBank, setCurBank] = useState<null | IBank>(null);
+  const [curBank, setCurBank] = useState<null | IOffice>(null);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => success(pos),
+      error,
+      options
+    );
+  }, []);
 
   const handleAtmClick = (atm: IAtm) => {
     setCurAtm(atm);
     setCurBank(null);
   };
 
-  const handleBankClick = (bank: IBank) => {
+  const handleBankClick = (bank: IOffice) => {
     setCurBank(bank);
     setCurAtm(null);
   };
@@ -78,14 +47,6 @@ export const App = () => {
   function error() {
     //console.warn(`ERROR`);
   }
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => success(pos),
-      error,
-      options
-    );
-  }, []);
 
   return (
     <ThemeProvider theme={theme}>

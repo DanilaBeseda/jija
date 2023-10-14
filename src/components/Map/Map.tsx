@@ -1,17 +1,29 @@
 import { icon } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-
+import { useEffect } from "react";
 import "./leaflet.css";
-import { IAtm, IBank } from "../../App";
+import { api } from "../../api";
+import { IAtm, IOffice } from "../../types";
 
 interface iCoordsProps {
   coords: [number, number];
   onAtmClick: (atm: IAtm) => void;
-  onBankClick: (bank: IBank) => void;
+  onBankClick: (bank: IOffice) => void;
 }
 
 export const Map = ({ coords, onAtmClick, onBankClick }: iCoordsProps) => {
+  const { getAtms, getOffices } = api;
   const centerPosition = coords;
+
+  useEffect(() => {
+    const getData = async () => {
+      const atms = await getAtms();
+      const offices = await getOffices();
+      console.log(atms, offices);
+    };
+
+    getData();
+  }, []);
 
   return (
     <MapContainer

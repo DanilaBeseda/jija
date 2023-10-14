@@ -1,9 +1,9 @@
+import { IAtm, IOffice } from "../../types";
 import "./Popover.css";
-import { IAtm, IBank } from "../../App.tsx";
 //import "../../../public/ATM-photo.jpg"
 interface IPopoverProps {
   atm: IAtm | null;
-  bank: IBank | null;
+  bank: IOffice | null;
 }
 export const Popover = ({ atm, bank }: IPopoverProps) => {
   return (
