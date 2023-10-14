@@ -1,4 +1,4 @@
-import { LatLngExpression, LeafletMouseEvent, icon } from "leaflet";
+import { LeafletMouseEvent, icon } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import "./leaflet.css";
@@ -9,7 +9,7 @@ interface iCoordsProps {
 }
 
 export const Map = ({ coords, onClick }: iCoordsProps) => {
-  const centerPosition: LatLngExpression = [coords[0], coords[1]];
+  const centerPosition = coords;
 
   return (
     <MapContainer
