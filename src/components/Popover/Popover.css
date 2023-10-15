@@ -80,3 +80,15 @@
 .userTypeButtonActive {
   background: #41416e;
 }
+
+.serviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.serviceLabel {
+  color: #cecece;
+  margin: 0;
+  margin-left: 10px;
+}

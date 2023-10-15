@@ -23,6 +23,7 @@ import {useState} from "react";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import cn from 'classnames'
+import {atmIndividualService, atmService, officeIndividualService, officeService} from "../../config.ts";
 
 
 interface IPopoverProps {
@@ -72,7 +73,7 @@ const BarChart = ({title, load}: IBarProps) => {
       {
         label: title,
         data: load[0].loads.map((hour => hour[1])),
-        backgroundColor: 'red',
+        backgroundColor: '#cecece',
       },
     ],
   };
@@ -97,20 +98,15 @@ const WorkFours = ({title, data}:IWorkHoursProps) => {
   </div>
 }
 
-const OfficeService = () => {
-  return <p className={'text'}>
-    открытие и закрытие счетов, переводы денежных средств, выдачу кредитов и займов, пополнение депозитов, обмен валюты, выпуск и использование банковских карт, платежи через интернет-банкинг и многое другое.
-  </p>
+const ServiceList = ({data}: {data: string[]}) => {
+  return (<div className={'serviceList'}>
+    <p className={'text'}> Предоставляемые услуги </p>
+        {data.map((s) => <p className={'serviceLabel'}>
+          {`  -  ${s}`}
+        </p>)}
+      </div>)
 }
 
-const ATMService = () => {
-  return <p className={'text'}>
-    снять наличные с банковской карты
-    оплатить мобильный телефон,
-    запросить баланс или выписку по последним операциям,
-    перевести средства с карты на карту.
-  </p>
-}
 
 export const PopoverOffice =  ({office}: { office: IOffice }) => {
   const [individual, setIndividual] = useState(true)
@@ -127,18 +123,20 @@ export const PopoverOffice =  ({office}: { office: IOffice }) => {
           : office?.openHours && <WorkFours title={'Режим работы для юр. лиц'} data={office.openHours}/>
           }
           {individual ?
-              office?.load && <BarChart title={'Загруженность отделения для юр. лиц'} load={office?.load}/>
+              office?.openHoursIndividual && <BarChart title={'Загруженность отделения для юр. лиц'} load={office?.loadIndividuals}/>
              : office?.load && <BarChart title={'Загруженность отделения для юр. лиц'} load={office?.load}/>
           }
-        {}
+          {
+            individual ? <ServiceList data={officeIndividualService}/> : <ServiceList data={officeService}/>
+          }
         <div className={'divider'}/>
-        <OfficeService/>
         </SimpleBar>
       </div>
   )
 }
 
 export const PopoverATM = ({atm}: { atm: IAtm }) => {
+  const [individual, setIndividual] = useState(true)
   return(
       <div className="popover">
         <SimpleBar style={{ maxHeight: '100%' }}>
@@ -146,9 +144,12 @@ export const PopoverATM = ({atm}: { atm: IAtm }) => {
           <img src={"public/ATM-photo.jpg"} className={"photo"}  alt=''/>
           <p className={'popoverAddress'}>{atm?.address}</p>
           <div className={'divider'}/>
+          { <UserTypeButton individual={individual} setIndividual={setIndividual} />}
              {atm?.load && <BarChart title = 'Загруженность банкомата' load={atm?.load}/>}
+          {
+            individual ? <ServiceList data={atmIndividualService}/> : <ServiceList data={atmService}/>
+          }
           <div className={'divider'}/>
-          <OfficeService/>
         </SimpleBar>
       </div>
   )
