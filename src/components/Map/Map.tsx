@@ -1,10 +1,12 @@
-import {LeafletMouseEvent, icon} from "leaflet";
+import {LeafletMouseEvent, icon, divIcon, point} from "leaflet";
 import {MapContainer, TileLayer, Marker, Polyline, useMapEvent} from "react-leaflet";
 import {useEffect, useState} from "react";
 import "./leaflet.css";
 import {api} from "../../api";
 import {IAtm, IOffice, IRoute} from "../../types";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import "./MarkerCluster.css"
+
 
 interface iCoordsProps {
     coords: [number, number];
@@ -52,7 +54,20 @@ export const Map = ({coords, onAtmClick, onOfficeClick, curRoute, onLeftClick}: 
                 icon={icon({iconUrl: "/public/user.svg"})}
             />
 
-            <MarkerClusterGroup>
+            <MarkerClusterGroup
+                polygonOptions={{
+                    opacity: 0,
+                    fillOpacity: 0,
+                }}
+                maxClusterRadius={80}
+                iconCreateFunction={(cluster: {_childCount: number}) => {
+                    console.log(cluster)
+                    return divIcon({
+                    html: `<span>${cluster._childCount}</span>`,
+                    className: 'custom-marker-cluster',
+                    iconSize: point(33, 33, true),
+                })}}
+            >
                 {atms?.map((atm, index) => (
                     <Marker
                         key={index}

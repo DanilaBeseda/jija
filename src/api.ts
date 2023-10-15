@@ -14,7 +14,8 @@ export const api = {
 
 export const api_osm = {
     buildRoute: (startPos: IPos, dstPos: IPos, profile: TProfiles): Promise<IRoute> => {
-        return axios.get(`http://65.109.239.28:8182/route/v1/${profile}/${startPos.lng},${startPos.lat};${dstPos.lng},${dstPos.lat}` +
+        const port = profile == 'car' ? 8183 : 8182
+        return axios.get(`http://65.109.239.28:${port}/route/v1/${profile}/${startPos.lng},${startPos.lat};${dstPos.lng},${dstPos.lat}` +
             '?' +
             'steps=true' +
             '&geometries=geojson' +
