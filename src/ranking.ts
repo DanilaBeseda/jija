@@ -1,4 +1,4 @@
-import {IAtm, IDayLoad, IOffice, IPos, IRanked, IRankResult, IRoute, TPerson, TProfiles, TTarget} from "./types.ts";
+import {IAtm, IDayLoad, IOffice, IPos, IRanked, IRankingResult, IRoute, TPerson, TProfiles, TTarget} from "./types.ts";
 import {api, api_osm} from "./api.ts";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,7 +29,7 @@ export function getWaitingTime(arrivalTime: Date, target: IOffice | IAtm, target
     return predictLoad
 }
 
-export const rank = async (time: Date, pos: IPos, targetType: TTarget, personType: TPerson, profile: TProfiles): Promise<IRankResult> => {
+export const rank = async (time: Date, pos: IPos, targetType: TTarget, personType: TPerson, profile: TProfiles): Promise<IRankingResult> => {
     const nearestTargets = targetType == 'office' ? await api.getOfficesNearest(pos) : await api.getAtmsNearest(pos)
     nearestTargets.filter(() => true)
     let rankedTargets: IRanked[] = []

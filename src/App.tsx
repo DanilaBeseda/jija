@@ -5,7 +5,7 @@ import Header from "./components/Header/Header.tsx";
 import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
-import {IAtm, IOffice, IRoute} from "./types.ts";
+import {IAtm, IOffice, IRankingResult, IRoute} from "./types.ts";
 import { LeafletMouseEvent } from "leaflet";
 import {api_osm} from "./api.ts";
 import {rank} from "./ranking.ts";
@@ -19,7 +19,7 @@ export const App = () => {
   const [curAtm, setCurAtm] = useState<null | IAtm>(null);
   const [curOffice, setCurOffice] = useState<null | IOffice>(null);
   const [curRoute, setCurRoute] = useState<null | IRoute>(null);
-
+  const [rankingResult, setRankingResult] = useState<null | IRankingResult>(null)
   /* useEffect(() => {
     const handleClick = () => {
       setCurAtm(null);
@@ -39,12 +39,16 @@ export const App = () => {
     );
   }, []);
 
+  useEffect(() => {
+    coords && rank(new Date(Date.now()), {lat: coords[0], lng: coords[1]}, 'atm', 'individual', 'foot').then(setRankingResult)
+  }, [coords])
+
   const handleAtmClick = (e: LeafletMouseEvent, atm: IAtm) => {
     e.originalEvent.stopPropagation();
     setCurAtm(atm);
     setCurOffice(null);
     // todo add selected profile
-    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: atm.latitude, lng: atm.longitude}, 'foot').then((route) => setCurRoute(route))
+    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: atm.latitude, lng: atm.longitude}, 'car').then((route) => setCurRoute(route))
   };
 
   const handleOfficeClick = (e: LeafletMouseEvent, bank: IOffice) => {
@@ -52,7 +56,7 @@ export const App = () => {
     setCurOffice(bank);
     setCurAtm(null);
     // todo add selected profile
-    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: bank.latitude, lng: bank.longitude}, 'foot').then((route) => setCurRoute(route))
+    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: bank.latitude, lng: bank.longitude}, 'car').then((route) => setCurRoute(route))
   };
 
   const options = {
@@ -62,7 +66,7 @@ export const App = () => {
   };
 
   function success(pos: GeolocationPosition) {
-    rank(new Date(Date.now()), {lat: pos.coords.latitude, lng: pos.coords.longitude}, 'atm', 'individual', 'foot').then(console.log).catch(console.log)
+
     setCoords([pos.coords.latitude, pos.coords.longitude]);
   }
 
@@ -72,7 +76,9 @@ export const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="app">
+      <div className="app" onContextMenu={(event) => {
+        event.preventDefault();
+      }}>
         <Header coords={coords} />
         {coords[0] !== 0 && (
           <Map
@@ -80,6 +86,7 @@ export const App = () => {
             onAtmClick={handleAtmClick}
             onOfficeClick={handleOfficeClick}
             curRoute={curRoute}
+            onLeftClick={(e) => {setCoords([e.latlng.lat, e.latlng.lng])}}
           />
         )}
         {(curAtm || curOffice) && <Popover atm={curAtm} office={curOffice} />}

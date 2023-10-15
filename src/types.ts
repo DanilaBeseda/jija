@@ -64,7 +64,7 @@ export interface IRanked {
   summaryTime: number
 }
 
-export interface IRankResult {
+export interface IRankingResult {
   top: IRanked[]
   bestTravelTime: IRanked | undefined
   bestWaitingTime: IRanked | undefined
