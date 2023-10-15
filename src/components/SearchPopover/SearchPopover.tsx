@@ -94,6 +94,8 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
     const [serviceList, setServiceList] = useState<string[]>(officeIndividualService)
     const [openModal, setOpenModal] = useState(false)
 
+    console.log("123", rankingResult?.top)
+
     useEffect(() => {
         if (individual && office) setServiceList(officeIndividualService)
         if (!individual && office) setServiceList(officeService)
@@ -122,7 +124,10 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
 
     return (
         <div className={'searchPopover'}>
-            <SimpleBar style={{ maxHeight: '100%', display: 'flex' }}>
+            <SimpleBar style={{ maxHeight: '100%'}}>
+                <div className={'simplebarContent'}>
+
+
             <p className={'text generalTitle'}>
                Поиск маршрута.
             </p>
@@ -138,17 +143,17 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
             </div> }
             <ServiceModal open={openModal} setOpen={setOpenModal} services={serviceList} setService={setService}/>
             <div className={'invalidLabel'}>
-                <Checkbox defaultChecked value={blind} onChange={(event, checked) => {setBlind(checked)}}/>
+                <Checkbox value={blind} onChange={(event, checked) => {setBlind(checked)}}/>
                 Для с людей с ограничениями по зрению
             </div>
             <div className={'invalidLabel'}>
-                <Checkbox defaultChecked value={wheel} onChange={(event, checked) => {setWheel(checked)}}/>
+                <Checkbox value={wheel} onChange={(event, checked) => {setWheel(checked)}}/>
                 Для маломобильных граждан
             </div>
             <div className={'divider'}/>
-            <div className={'travelTitle'}>
+                { (rankingResult?.bestTravelTime || rankingResult?.bestWaitingTime) &&<div className={'travelTitle'}>
                 Лучшие варианты
-            </div>
+            </div> }
             {
                 rankingResult?.bestTravelTime && <div className={'buttonTravel'} onClick={() => {
                     handleClick(rankingResult.bestTravelTime)
@@ -163,12 +168,12 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
                     {`Дорога с наименьшим временем ожидания очереди: ${msecToString(rankingResult.bestWaitingTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestWaitingTime.summaryTime)}.` }
                 </div>
             }
-            <div className={'divider'}/>
-            <div className={'travelTitle'}>
+                {rankingResult?.top && rankingResult?.top.length !== 0 && <div className={'divider'}/>}
+                {rankingResult?.top && rankingResult?.top.length !== 0 && <div className={'travelTitle'}>
                 Топ вариантов с минимальным сумарным временем.
-            </div>
+            </div>}
             {
-                rankingResult?.top && rankingResult.top.map((r) =>
+                rankingResult?.top && rankingResult?.top.length !== 0 && rankingResult.top.map((r) =>
                     <div className={'buttonTravel'} onClick={() => {
                         handleClick(rankingResult.bestTravelTime)
                     }}>
@@ -176,6 +181,7 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
                     </div>
                 )
             }
+                </div>
             </SimpleBar>
         </div>
     )
