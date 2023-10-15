@@ -96,5 +96,5 @@ export const rank = async (time: Date,
         rankedTargets.push(ranked)
     }
     rankedTargets = rankedTargets.sort((a, b) => a.summaryTime - b.summaryTime)
-    return {top: rankedTargets, bestTravelTime: bestWaitingTimeRanked, bestWaitingTime: bestWaitingTimeRanked}
+    return {top: rankedTargets, bestTravelTime: bestTravelTimeRanked, bestWaitingTime: bestWaitingTimeRanked}
 }

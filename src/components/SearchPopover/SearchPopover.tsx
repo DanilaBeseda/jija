@@ -142,11 +142,11 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
             </div> }
             <ServiceModal open={openModal} setOpen={setOpenModal} services={serviceList} setService={setService}/>
             <div className={'invalidLabel'}>
-                <Checkbox value={blind} onChange={(event, checked) => {setBlind(checked)}}/>
+                <Checkbox sx={{color: 'white'}} value={blind} onChange={(event, checked) => {setBlind(checked)}}/>
                 Для с людей с ограничениями по зрению
             </div>
             <div className={'invalidLabel'}>
-                <Checkbox value={wheel} onChange={(event, checked) => {setWheel(checked)}}/>
+                <Checkbox sx={{color: 'white'}} value={wheel} onChange={(event, checked) => {setWheel(checked)}}/>
                 Для маломобильных граждан
             </div>
             <div className={'divider'}/>
@@ -157,14 +157,36 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
                 rankingResult?.bestTravelTime && <div className={'buttonTravel'} onClick={() => {
                     handleClick(rankingResult?.bestWaitingTime)
                 }}>
-                    {`Дорога с наименьшим временем пути: ${msecToString(rankingResult.bestTravelTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestTravelTime.summaryTime)}.` }
+                <div style={{color: '#969696'}}>
+                    {rankingResult.bestTravelTime.target.address}
+                </div>
+                <div>
+                    {`Наименьшее время в дороге: ${msecToString(rankingResult.bestTravelTime.travelTime)}`}
+                </div>
+                <div>
+                    {`Время в очереди: ${msecToString(rankingResult.bestTravelTime.waitingTime)}`}
+                </div>
+                <div>
+                    {`Общее время: ${msecToString(rankingResult.bestTravelTime.summaryTime)}`}
+                </div>
                 </div>
             }
             {
                 rankingResult?.bestWaitingTime && <div className={'buttonTravel'} onClick={() => {
                     handleClick(rankingResult.bestTravelTime)
                 }}>
-                    {`Дорога с наименьшим временем ожидания очереди: ${msecToString(rankingResult.bestWaitingTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestWaitingTime.summaryTime)}.` }
+                    <div style={{color: '#969696'}}>
+                        {rankingResult.bestWaitingTime.target.address}
+                    </div>
+                    <div>
+                        {`Наименьшее время в очереди: ${msecToString(rankingResult.bestWaitingTime.waitingTime)}`}
+                    </div>
+                    <div>
+                        {`Время в пути: ${msecToString(rankingResult.bestWaitingTime.travelTime)}`}
+                    </div>
+                    <div>
+                        {`Общее время: ${msecToString(rankingResult.bestWaitingTime.summaryTime)}`}
+                    </div>
                 </div>
             }
                 {rankingResult?.top && rankingResult?.top.length !== 0 && <div className={'divider'}/>}
@@ -176,7 +198,18 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
                     <div className={'buttonTravel'} onClick={() => {
                         handleClick(r)
                     }}>
-                        {`Дорога с наименьшим временем ожидания очереди: ${msecToString(r.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(r.summaryTime)}.` }
+                        <div style={{color: '#969696'}}>
+                            {r.target.address}
+                        </div>
+                        <div>
+                            {`Время в очереди: ${msecToString(r.waitingTime)}`}
+                        </div>
+                        <div>
+                            {`Время в пути: ${msecToString(r.travelTime)}`}
+                        </div>
+                        <div>
+                            {`Общее время: ${msecToString(r.summaryTime)}`}
+                        </div>
                     </div>
                 )
             }

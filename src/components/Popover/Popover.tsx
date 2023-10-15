@@ -142,7 +142,7 @@ export const PopoverOffice =  ({office, time }: { office: IOffice, time: ITime |
       <div className="popover">
         <SimpleBar style={{ maxHeight: '100%' }}>
         <p className={'popoverName'}>{office?.salePointName}</p>
-        <img src={"public/Dep.jpg"} className={"photo"}  alt=''/>
+        <img src={"public/Dep.jpg"} className={"photo"}  alt='' style={{borderRadius: 6}}/>
           {
             office.metroStation ? <p className={'popoverAddress'}>{`${office?.address} (${office?.metroStation})`}</p>
                 :

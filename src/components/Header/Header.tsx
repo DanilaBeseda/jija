@@ -14,9 +14,6 @@ const Header = ({ coords }: iCoordsProps) => {
         />
       </div>
       <div className={"probel"} />
-      <div className={"mainCoords"}>
-        Latitude: {coords[0]};<br /> Longitude: {coords[1]}
-      </div>
     </div>
   );
 };

@@ -2,9 +2,10 @@
     position: fixed;
     z-index: 9999900;
     top: 84px;
-    left: 20px;
+    left: 50px;
     bottom: 20px;
-    background-color: rgb(26, 30, 35);
+    background-color: rgba(26, 30, 35, 0.8);
+    backdrop-filter: blur(10px);
     width: 375px;
     border-radius: 10px;
     padding: 10px;
@@ -43,10 +44,18 @@
 .buttonTravel {
     color: #FFF;
     user-select: none;
-    background: #42429b;
+    background: transparent;
+    backdrop-filter: saturate(300%);
+    border: 2px solid rgb(18, 84, 154);
+    border-radius: 6px;
     cursor: pointer;
     padding: 5px;
     margin-top: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
 }
 .travelTitle {
     display: flex;
