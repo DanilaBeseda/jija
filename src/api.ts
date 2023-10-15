@@ -14,7 +14,7 @@ export const api = {
 
 export const api_osm = {
     buildRoute: (startPos: IPos, dstPos: IPos, profile: TProfiles): Promise<IRoute> => {
-        return axios.get(`http://router.project-osrm.org/route/v1/${profile}/${startPos.lng},${startPos.lat};${dstPos.lng},${dstPos.lat}` +
+        return axios.get(`http://65.109.239.28:8182/route/v1/${profile}/${startPos.lng},${startPos.lat};${dstPos.lng},${dstPos.lat}` +
             '?' +
             'steps=true' +
             '&geometries=geojson' +
