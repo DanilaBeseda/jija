@@ -94,8 +94,6 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
     const [serviceList, setServiceList] = useState<string[]>(officeIndividualService)
     const [openModal, setOpenModal] = useState(false)
 
-    console.log("123", rankingResult?.top)
-
     useEffect(() => {
         if (individual && office) setServiceList(officeIndividualService)
         if (!individual && office) setServiceList(officeService)
@@ -114,6 +112,7 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
 
     const handleClick = (item: IRanked | undefined) => {
         if (!item) return
+        console.log(item?.target)
         if (item.targetType === 'atm') {
             atmSelect(undefined, item.target)
         }
@@ -156,7 +155,7 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
             </div> }
             {
                 rankingResult?.bestTravelTime && <div className={'buttonTravel'} onClick={() => {
-                    handleClick(rankingResult.bestTravelTime)
+                    handleClick(rankingResult?.bestWaitingTime)
                 }}>
                     {`Дорога с наименьшим временем пути: ${msecToString(rankingResult.bestTravelTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestTravelTime.summaryTime)}.` }
                 </div>
@@ -175,7 +174,7 @@ export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setB
             {
                 rankingResult?.top && rankingResult?.top.length !== 0 && rankingResult.top.map((r) =>
                     <div className={'buttonTravel'} onClick={() => {
-                        handleClick(rankingResult.bestTravelTime)
+                        handleClick(r)
                     }}>
                         {`Дорога с наименьшим временем ожидания очереди: ${msecToString(r.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(r.summaryTime)}.` }
                     </div>
