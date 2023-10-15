@@ -54,7 +54,7 @@ export const rank = async (time: Date,
     for (const target of nearestTargets) {
         const targetPos: IPos = {lat: target.latitude, lng: target.longitude}
         const route: IRoute = await api_osm.buildRoute(pos, targetPos, profile);
-        const travelTime = route.duration * 60_000;
+        const travelTime = route.duration * 1000;
         const arrivalTime = new Date(time.getTime() + travelTime)
         const waitingTime = getWaitingTime(arrivalTime, target, targetType, personType)
         if (waitingTime == null) continue
