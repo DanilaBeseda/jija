@@ -30,6 +30,9 @@ import { TalonchikModal } from "./Talonchik.tsx";
 interface IPopoverProps {
   atm: IAtm | null;
   office: IOffice | null;
+  travelTime: number
+  waitingTime: number
+  summaryTime: number
 }
 
 interface IBarProps {
@@ -208,7 +211,7 @@ export const PopoverATM = ({atm}: { atm: IAtm }) => {
   )
 }
 
-export const Popover = ({ office, atm }: IPopoverProps) => {
+export const Popover = ({ office, atm, travelTime, waitingTime, summaryTime }: IPopoverProps) => {
   if (office) return (<PopoverOffice office={office}/>)
   if (atm) return (<PopoverATM atm={atm}/>)
   return null

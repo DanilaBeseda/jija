@@ -70,3 +70,9 @@ export interface IRankingResult {
   bestTravelTime: IRanked | undefined
   bestWaitingTime: IRanked | undefined
 }
+
+export interface TTargetTime {
+  travelTime: number
+  waitingTime: number
+  summaryTime: number
+}
