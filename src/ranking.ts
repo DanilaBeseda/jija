@@ -29,9 +29,25 @@ export function getWaitingTime(arrivalTime: Date, target: IOffice | IAtm, target
     return predictLoad
 }
 
-export const rank = async (time: Date, pos: IPos, targetType: TTarget, personType: TPerson, profile: TProfiles): Promise<IRankingResult> => {
+export const rank = async (time: Date,
+                           pos: IPos,
+                           targetType: TTarget,
+                           personType: TPerson,
+                           profile: TProfiles,
+                           wheel: boolean,
+                           blind: boolean
+                           ): Promise<IRankingResult> => {
     const nearestTargets = targetType == 'office' ? await api.getOfficesNearest(pos) : await api.getAtmsNearest(pos)
-    nearestTargets.filter(() => true)
+    nearestTargets.filter((target) => {
+        let result = true
+        if (isOffice(targetType, target)) {
+            result = wheel ? target.hasRamp == 'Y' : true
+        } else {
+            result = wheel ? target.services.wheelchair.serviceActivity == 'AVAILABLE' : true
+            result = blind ? target.services.blind.serviceActivity == 'AVAILABLE' : true
+        }
+        return result
+    })
     let rankedTargets: IRanked[] = []
     let bestTravelTimeRanked: IRanked | undefined = undefined
     let bestWaitingTimeRanked: IRanked | undefined = undefined

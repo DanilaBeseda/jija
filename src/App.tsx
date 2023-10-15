@@ -50,8 +50,16 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    coords && rank(new Date(Date.now()), {lat: coords[0], lng: coords[1]}, 'atm', 'individual', 'foot').then(setRankingResult)
-  }, [coords])
+    coords && rank(new Date(Date.now()),
+        {lat: coords[0], lng: coords[1]},
+        office ? 'office' :'atm',
+        individual ? 'individual' : 'legal',
+        car ? 'car' : 'foot',
+        wheel,
+        blind
+        )
+        .then(setRankingResult)
+  }, [coords, individual, office, car, service, blind, wheel])
 
   const handleAtmClick = (e: LeafletMouseEvent, atm: IAtm) => {
     e.originalEvent.stopPropagation();
