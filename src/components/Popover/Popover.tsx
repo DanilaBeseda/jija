@@ -19,11 +19,12 @@ ChartJS.register(
 );
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import cn from 'classnames'
 import {atmIndividualService, atmService, officeIndividualService, officeService} from "../../config.ts";
+import { TalonchikModal } from "./Talonchik.tsx";
 
 
 interface IPopoverProps {
@@ -110,6 +111,19 @@ const ServiceList = ({data}: {data: string[]}) => {
 
 export const PopoverOffice =  ({office}: { office: IOffice }) => {
   const [individual, setIndividual] = useState(true)
+  const [openModal, setOpenModal] = useState(false)
+  const [number, setNumber] = useState<undefined | number>(undefined)
+  const [now, setNow] = useState<null | string>(null)
+
+  useEffect(() => {
+    const now = new Date()
+    setNow(`${now.getHours()}:${now.getMinutes()}`)
+  }, [number])
+
+  const setOpen = (open: boolean) => {
+    setOpenModal(open)
+  }
+
   return(
       <div className="popover">
         <SimpleBar style={{ maxHeight: '100%' }}>
@@ -123,13 +137,26 @@ export const PopoverOffice =  ({office}: { office: IOffice }) => {
           : office?.openHours && <WorkFours title={'Режим работы для юр. лиц'} data={office.openHours}/>
           }
           {individual ?
-              office?.openHoursIndividual && <BarChart title={'Загруженность отделения для юр. лиц'} load={office?.loadIndividuals}/>
+              office?.openHoursIndividual && <BarChart title={'Загруженность отделения для физ. лиц'} load={office?.loadIndividuals}/>
              : office?.load && <BarChart title={'Загруженность отделения для юр. лиц'} load={office?.load}/>
           }
           {
             individual ? <ServiceList data={officeIndividualService}/> : <ServiceList data={officeService}/>
           }
         <div className={'divider'}/>
+          {
+            !number ?  <div className={'talonchikButton'} onClick={(e) => {
+              setOpenModal(true)
+              e.stopPropagation()
+            }}>
+              Получить талон
+            </div> :
+                <div className={'talonchikNumber'}>
+                  {`Ваш талон номер: ${number}. Время получения ${now}.`}
+                </div>
+          }
+
+          <TalonchikModal open={openModal} setOpen={setOpen} setNumber={setNumber} services={officeService}/>
         </SimpleBar>
       </div>
   )
