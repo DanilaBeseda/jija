@@ -9,6 +9,8 @@ import {IAtm, IOffice, IRankingResult, IRoute} from "./types.ts";
 import { LeafletMouseEvent } from "leaflet";
 import {api_osm} from "./api.ts";
 import {rank} from "./ranking.ts";
+import {SearchPopover} from "./components/SearchPopover/SearchPopover.tsx";
+import {officeIndividualService} from "./config.ts";
 
 const theme = createTheme({
   palette: {},
@@ -20,6 +22,14 @@ export const App = () => {
   const [curOffice, setCurOffice] = useState<null | IOffice>(null);
   const [curRoute, setCurRoute] = useState<null | IRoute>(null);
   const [rankingResult, setRankingResult] = useState<null | IRankingResult>(null)
+
+  const [individual, setIndividual] = useState(true)
+  const [office, setOffice] = useState(true)
+  const [car, setCar] = useState(false)
+  const [service, setService] = useState("")
+  const [blind, setBlind] = useState(false)
+  const [wheel, setWheel] = useState(false)
+
   /* useEffect(() => {
     const handleClick = () => {
       setCurAtm(null);
@@ -90,6 +100,7 @@ export const App = () => {
           />
         )}
         {(curAtm || curOffice) && <Popover atm={curAtm} office={curOffice} />}
+        <SearchPopover />
       </div>
     </ThemeProvider>
   );

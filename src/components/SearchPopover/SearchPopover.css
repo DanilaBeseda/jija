@@ -1,0 +1,41 @@
+.searchPopover {
+    position: fixed;
+    z-index: 9999900;
+    top: 84px;
+    left: 20px;
+    bottom: 20px;
+    background-color: rgb(26, 30, 35);
+    width: 375px;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.generalTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.serviceChanger {
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+    background: #565555;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+.invalidLabel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:5px;
+    color: #cecece;
+    user-select: none;
+}
