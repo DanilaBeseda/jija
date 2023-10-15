@@ -5,10 +5,10 @@ import Header from "./components/Header/Header.tsx";
 import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
-import {IAtm, IOffice, IRankingResult, IRoute, TTargetTime} from "./types.ts";
+import {IAtm, IOffice, IRankingResult, IRoute, ITime} from "./types.ts";
 import { LeafletMouseEvent } from "leaflet";
 import {api_osm} from "./api.ts";
-import {rank} from "./ranking.ts";
+import {getTime, rank} from "./ranking.ts";
 import {SearchPopover} from "./components/SearchPopover/SearchPopover.tsx";
 
 const theme = createTheme({
@@ -29,7 +29,7 @@ export const App = () => {
   const [blind, setBlind] = useState(false)
   const [wheel, setWheel] = useState(false)
 
-  const [targetTime, setTargetTime] = useState<TTargetTime | null>(null)
+  const [targetTime, setTargetTime] = useState<ITime | null>(null)
 
   /* useEffect(() => {
     const handleClick = () => {
@@ -53,9 +53,23 @@ export const App = () => {
   useEffect(() => {
     curOffice && api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: curOffice.latitude, lng: curOffice.longitude}, car ? 'car' : 'foot').then((route) => {
       setCurRoute(route)
+      setTargetTime(getTime(
+          new Date(Date.now()),
+          route,
+          curOffice,
+          'office',
+          individual ? 'individual' : 'legal'
+      ))
     })
     curAtm && api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: curAtm.latitude, lng: curAtm.longitude}, car ? 'car' : 'foot').then((route) => {
       setCurRoute(route)
+      setTargetTime(getTime(
+          new Date(Date.now()),
+          route,
+          curAtm,
+          'atm',
+          individual ? 'individual' : 'legal'
+      ))
     })
     coords && rank(new Date(Date.now()),
         {lat: coords[0], lng: coords[1]},
@@ -73,7 +87,17 @@ export const App = () => {
     setCurAtm(atm);
     setCurOffice(null);
     // todo add selected profile
-    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: atm.latitude, lng: atm.longitude}, car ? 'car' : 'foot').then((route) => setCurRoute(route))
+    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: atm.latitude, lng: atm.longitude}, car ? 'car' : 'foot')
+        .then((route) => {
+          setCurRoute(route)
+          setTargetTime(getTime(
+              new Date(Date.now()),
+              route,
+              atm,
+              'atm',
+              individual ? 'individual' : 'legal'
+          ))
+        })
   };
 
   const handleOfficeClick = (e: LeafletMouseEvent, bank: IOffice) => {
@@ -81,7 +105,17 @@ export const App = () => {
     setCurOffice(bank);
     setCurAtm(null);
     // todo add selected profile
-    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: bank.latitude, lng: bank.longitude}, car ? 'car' : 'foot').then((route) => setCurRoute(route))
+    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: bank.latitude, lng: bank.longitude}, car ? 'car' : 'foot')
+        .then((route) => {
+          setCurRoute(route)
+          setTargetTime(getTime(
+              new Date(Date.now()),
+              route,
+              bank,
+              'office',
+              individual ? 'individual' : 'legal'
+          ))
+        })
   };
 
   const options = {
@@ -114,7 +148,7 @@ export const App = () => {
             onLeftClick={(e) => {setCoords([e.latlng.lat, e.latlng.lng])}}
           />
         )}
-        {(curAtm || curOffice) && targetTime && <Popover atm={curAtm} office={curOffice} travelTime={targetTime?.travelTime} waitingTime={targetTime?.waitingTime} summaryTime={targetTime?.summaryTime} />}
+        {(curAtm || curOffice) && targetTime && <Popover atm={curAtm} office={curOffice} travelTime={targetTime?.travelTime} waitingTime={targetTime?.waitingTime || 0} summaryTime={targetTime?.waitingTime || 0 + targetTime?.travelTime} />}
         <SearchPopover atmSelect={handleAtmClick} officeSelect={handleOfficeClick} blind={blind} wheel={wheel} setWheel={setWheel} car={car} setCar={setCar} rankingResult={rankingResult} office={office} setOffice={setOffice}  setBlind={setBlind} setIndividual={setIndividual} setService={setService} service={service} individual ={individual}/>
       </div>
     </ThemeProvider>

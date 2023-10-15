@@ -71,6 +71,12 @@ export interface IRankingResult {
   bestWaitingTime: IRanked | undefined
 }
 
+export interface ITime {
+  travelTime: number,
+  waitingTime: number | null,
+  arrivalTimestamp: Date
+}
+
 export interface TTargetTime {
   travelTime: number
   waitingTime: number

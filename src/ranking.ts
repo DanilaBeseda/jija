@@ -1,4 +1,16 @@
-import {IAtm, IDayLoad, IOffice, IPos, IRanked, IRankingResult, IRoute, TPerson, TProfiles, TTarget} from "./types.ts";
+import {
+    IAtm,
+    IDayLoad,
+    IOffice,
+    IPos,
+    IRanked,
+    IRankingResult,
+    IRoute,
+    ITime,
+    TPerson,
+    TProfiles,
+    TTarget
+} from "./types.ts";
 import {api, api_osm} from "./api.ts";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,6 +41,13 @@ export function getWaitingTime(arrivalTime: Date, target: IOffice | IAtm, target
     return predictLoad
 }
 
+export function getTime(time: Date, route: IRoute, target: IOffice | IAtm, targetType: TTarget, personType: TPerson): ITime {
+    const travelTime = route.duration * 1000;
+    const arrivalTimestamp = new Date(time.getTime() + travelTime)
+    const waitingTime = getWaitingTime(arrivalTimestamp, target, targetType, personType)
+    return {travelTime, arrivalTimestamp, waitingTime}
+}
+
 export const rank = async (time: Date,
                            pos: IPos,
                            targetType: TTarget,
@@ -55,8 +74,8 @@ export const rank = async (time: Date,
         const targetPos: IPos = {lat: target.latitude, lng: target.longitude}
         const route: IRoute = await api_osm.buildRoute(pos, targetPos, profile);
         const travelTime = route.duration * 1000;
-        const arrivalTime = new Date(time.getTime() + travelTime)
-        const waitingTime = getWaitingTime(arrivalTime, target, targetType, personType)
+        const arrivalTimestamp = new Date(time.getTime() + travelTime)
+        const waitingTime = getWaitingTime(arrivalTimestamp, target, targetType, personType)
         if (waitingTime == null) continue
         const summaryTime = travelTime + waitingTime
         const ranked = {travelTime, waitingTime, summaryTime, targetType, target}
