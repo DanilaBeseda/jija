@@ -4,12 +4,16 @@ import cn from "classnames";
 import {atmIndividualService, atmService, officeIndividualService, officeService} from "../../config.ts";
 import {ServiceModal} from "./ServiceModal.tsx";
 import Checkbox from '@mui/material/Checkbox';
-import {IRankingResult} from "../../types.ts";
+import {IAtm, IOffice, IRanked, IRankingResult} from "../../types.ts";
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
+import {LeafletMouseEvent} from "leaflet";
 
 
 interface ISearchPopoverProps {
+    atmSelect: (e: LeafletMouseEvent, atm: IAtm) => void
+    officeSelect: (e: LeafletMouseEvent, bank: IOffice) => void
+
     individual:boolean
     setIndividual: ( individual:boolean) => void
     office: boolean
@@ -86,7 +90,7 @@ const UserRadioButton = ({individual, setIndividual}: IUserTypeButtonProps  ) =>
     </div>)
 }
 
-export const SearchPopover = ({car, setCar, blind, setBlind, rankingResult, wheel, setWheel, individual, setIndividual, service, setService, setOffice, office}: ISearchPopoverProps) => {
+export const SearchPopover = ({atmSelect, officeSelect, car, setCar, blind, setBlind, rankingResult, wheel, setWheel, individual, setIndividual, service, setService, setOffice, office}: ISearchPopoverProps) => {
     const [serviceList, setServiceList] = useState<string[]>(officeIndividualService)
     const [openModal, setOpenModal] = useState(false)
 
@@ -104,6 +108,16 @@ export const SearchPopover = ({car, setCar, blind, setBlind, rankingResult, whee
         if (mins < 10)
             mins = '0' + mins;
         return hours + 'ч. ' + mins + 'мин.';
+    }
+
+    const handleClick = (item: IRanked | undefined) => {
+        if (!item) return
+        if (item.targetType === 'atm') {
+            atmSelect(undefined, item.target)
+        }
+        if (item.targetType === 'office') {
+            officeSelect(undefined, item.target)
+        }
     }
 
     return (
@@ -136,12 +150,16 @@ export const SearchPopover = ({car, setCar, blind, setBlind, rankingResult, whee
                 Лучшие варианты
             </div>
             {
-                rankingResult?.bestTravelTime && <div className={'buttonTravel'}>
+                rankingResult?.bestTravelTime && <div className={'buttonTravel'} onClick={() => {
+                    handleClick(rankingResult.bestTravelTime)
+                }}>
                     {`Дорога с наименьшим временем пути: ${msecToString(rankingResult.bestTravelTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestTravelTime.summaryTime)}.` }
                 </div>
             }
             {
-                rankingResult?.bestWaitingTime && <div className={'buttonTravel'}>
+                rankingResult?.bestWaitingTime && <div className={'buttonTravel'} onClick={() => {
+                    handleClick(rankingResult.bestTravelTime)
+                }}>
                     {`Дорога с наименьшим временем ожидания очереди: ${msecToString(rankingResult.bestWaitingTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestWaitingTime.summaryTime)}.` }
                 </div>
             }
@@ -151,7 +169,9 @@ export const SearchPopover = ({car, setCar, blind, setBlind, rankingResult, whee
             </div>
             {
                 rankingResult?.top && rankingResult.top.map((r) =>
-                    <div className={'buttonTravel'}>
+                    <div className={'buttonTravel'} onClick={() => {
+                        handleClick(rankingResult.bestTravelTime)
+                    }}>
                         {`Дорога с наименьшим временем ожидания очереди: ${msecToString(r.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(r.summaryTime)}.` }
                     </div>
                 )

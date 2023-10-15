@@ -61,7 +61,7 @@ export const App = () => {
   }, [coords, individual, office, car, service, blind, wheel])
 
   const handleAtmClick = (e: LeafletMouseEvent, atm: IAtm) => {
-    e.originalEvent.stopPropagation();
+    e?.originalEvent.stopPropagation();
     setCurAtm(atm);
     setCurOffice(null);
     // todo add selected profile
@@ -69,7 +69,7 @@ export const App = () => {
   };
 
   const handleOfficeClick = (e: LeafletMouseEvent, bank: IOffice) => {
-    e.originalEvent.stopPropagation();
+    e?.originalEvent.stopPropagation();
     setCurOffice(bank);
     setCurAtm(null);
     // todo add selected profile
@@ -107,7 +107,7 @@ export const App = () => {
           />
         )}
         {(curAtm || curOffice) && <Popover atm={curAtm} office={curOffice} />}
-        <SearchPopover blind={blind} wheel={wheel} setWheel={setWheel} car={car} setCar={setCar} rankingResult={rankingResult} office={office} setOffice={setOffice}  setBlind={setBlind} setIndividual={setIndividual} setService={setService} service={service} individual ={individual}/>
+        <SearchPopover atmSelect={handleAtmClick} officeSelect={handleOfficeClick} blind={blind} wheel={wheel} setWheel={setWheel} car={car} setCar={setCar} rankingResult={rankingResult} office={office} setOffice={setOffice}  setBlind={setBlind} setIndividual={setIndividual} setService={setService} service={service} individual ={individual}/>
       </div>
     </ThemeProvider>
   );
