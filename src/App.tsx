@@ -8,6 +8,7 @@ import { Popover } from "./components/Popover/Popover.tsx";
 import {IAtm, IOffice, IRoute} from "./types.ts";
 import { LeafletMouseEvent } from "leaflet";
 import {api_osm} from "./api.ts";
+import {rank} from "./ranking.ts";
 
 const theme = createTheme({
   palette: {},
@@ -61,6 +62,7 @@ export const App = () => {
   };
 
   function success(pos: GeolocationPosition) {
+    rank(new Date(Date.now()), {lat: pos.coords.latitude, lng: pos.coords.longitude}, 'atm', 'individual', 'foot').then(console.log).catch(console.log)
     setCoords([pos.coords.latitude, pos.coords.longitude]);
   }
 

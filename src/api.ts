@@ -25,8 +25,8 @@ export const api_osm = {
                 const nodes = response.data.routes[0].geometry.coordinates.map((pos: [number, number]) => [pos[1], pos[0]])
                 return {
                     nodes: nodes,
-                    distance: response.data.distance,
-                    duration: response.data.duration
+                    distance: response.data.routes[0].distance,
+                    duration: response.data.routes[0].duration
                 }
             })
     }

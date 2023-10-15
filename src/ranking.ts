@@ -1,4 +1,4 @@
-import {IAtm, IOffice, IPos, IRanked, IRankResult, IRoute, TPerson, TProfiles, TTarget} from "./types.ts";
+import {IAtm, IDayLoad, IOffice, IPos, IRanked, IRankResult, IRoute, TPerson, TProfiles, TTarget} from "./types.ts";
 import {api, api_osm} from "./api.ts";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -9,20 +9,23 @@ const isOffice = (targetType: TTarget, target: IOffice | IAtm): target is IOffic
 
 export function getWaitingTime(arrivalTime: Date, target: IOffice | IAtm, targetType: TTarget, person: TPerson): number | null {
     const weekDay = arrivalTime.getDay() == 0 ? 7 : arrivalTime.getDay()
-    let load: { day: number; loads: [number, number][] }[]
+    let load: IDayLoad[]
     if (isOffice(targetType, target)) {
         load = person == 'individual' ?  target.loadIndividuals : target.load
     } else {
         load = target.load
     }
-    load = load.filter((day) => day.day == weekDay)
+    load = load.filter((day) => {
+        return day.day == weekDay
+    })
+
     if (load.length != 1) return null
     const dayLoads = load[0]
     const dayHour = arrivalTime.getHours()
     const hourLoads = dayLoads.loads.filter((hourLoadTuple) => hourLoadTuple[0] == dayHour)
     if (hourLoads.length != 1) return null
     const predictLoad = hourLoads[0][1] * 60_000
-    if (!target.workHrs.includes(Math.floor((dayHour * 3_600_000 + predictLoad) / 3_600_000))) return null
+    if (!dayLoads.workHrs.includes(Math.floor((dayHour * 3_600_000 + predictLoad) / 3_600_000))) return null
     return predictLoad
 }
 
