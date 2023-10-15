@@ -5,7 +5,7 @@ import Header from "./components/Header/Header.tsx";
 import { useEffect, useState } from "react";
 import { Map } from "./components/Map/Map.tsx";
 import { Popover } from "./components/Popover/Popover.tsx";
-import {IAtm, IOffice, IRankingResult, IRoute, ITime} from "./types.ts";
+import { IAtm, IOffice, IRankingResult, IRoute, ITime } from "./types.ts";
 import { LeafletMouseEvent } from "leaflet";
 import {api_osm} from "./api.ts";
 import {getTime, rank} from "./ranking.ts";
@@ -148,7 +148,7 @@ export const App = () => {
             onLeftClick={(e) => {setCoords([e.latlng.lat, e.latlng.lng])}}
           />
         )}
-        {(curAtm || curOffice) && targetTime && <Popover atm={curAtm} office={curOffice} travelTime={targetTime?.travelTime} waitingTime={targetTime?.waitingTime || 0} summaryTime={targetTime?.waitingTime || 0 + targetTime?.travelTime} />}
+        {(curAtm || curOffice) && targetTime && <Popover atm={curAtm} office={curOffice} time={targetTime} />}
         <SearchPopover atmSelect={handleAtmClick} officeSelect={handleOfficeClick} blind={blind} wheel={wheel} setWheel={setWheel} car={car} setCar={setCar} rankingResult={rankingResult} office={office} setOffice={setOffice}  setBlind={setBlind} setIndividual={setIndividual} setService={setService} service={service} individual ={individual}/>
       </div>
     </ThemeProvider>

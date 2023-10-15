@@ -1,4 +1,4 @@
-import {IAtm, IOffice} from "../../types";
+import {IAtm, IOffice, ITime} from "../../types";
 import "./Popover.css";
 import { Tooltip } from "@mui/material";
 import { Bar } from 'react-chartjs-2';
@@ -30,9 +30,7 @@ import { TalonchikModal } from "./Talonchik.tsx";
 interface IPopoverProps {
   atm: IAtm | null;
   office: IOffice | null;
-  travelTime: number
-  waitingTime: number
-  summaryTime: number
+  time: ITime | null
 }
 
 interface IBarProps {
@@ -111,8 +109,17 @@ const ServiceList = ({data}: {data: string[]}) => {
       </div>)
 }
 
+function msecToString(val: number) {
+  var mins = Math.round(val / 60000);
+  const hours = Math.floor(mins / 60);
+  mins %= 60;
+  if (mins < 10)
+    mins = '0' + mins;
+  return hours + 'ч. ' + mins + 'мин.';
+}
 
-export const PopoverOffice =  ({office}: { office: IOffice }) => {
+
+export const PopoverOffice =  ({office, time }: { office: IOffice, time: ITime | null  }) => {
   const [individual, setIndividual] = useState(true)
   const [openModal, setOpenModal] = useState(false)
   const [number, setNumber] = useState<undefined | number>(undefined)
@@ -140,6 +147,19 @@ export const PopoverOffice =  ({office}: { office: IOffice }) => {
             office.metroStation ? <p className={'popoverAddress'}>{`${office?.address} (${office?.metroStation})`}</p>
                 :
                 <p className={'popoverAddress'}>{`${office?.address}`}</p>
+          }
+          {time?.travelTime && <div className={'timeLine'}>
+            Время в пути: {msecToString(time.travelTime)}
+          </div>}
+          {
+              time?.waitingTime && <div className={'timeLine'}>
+                Время ожидания в очереди: {msecToString(time.waitingTime)}
+              </div>
+          }
+          {
+              time?.arrivalTimestamp && <div className={'timeLine'}>
+                Прогнозируемая дата прибытия: {time.arrivalTimestamp.toDateString()}
+              </div>
           }
         <div className={'divider'}/>
           { office.openHours[0].days !== 'Не обслуживает ЮЛ' && <UserTypeButton individual={individual} setIndividual={setIndividual} />}
@@ -180,7 +200,7 @@ export const PopoverOffice =  ({office}: { office: IOffice }) => {
   )
 }
 
-export const PopoverATM = ({atm}: { atm: IAtm }) => {
+export const PopoverATM = ({atm, time}: { atm: IAtm, time: ITime | null   }) => {
   const [individual, setIndividual] = useState(true)
   return(
       <div className="popover">
@@ -188,6 +208,19 @@ export const PopoverATM = ({atm}: { atm: IAtm }) => {
           <p className={'popoverName'}>Банкомат</p>
           <img src={"public/ATM-photo.jpg"} className={"photo"}  alt=''/>
           <p className={'popoverAddress'}>{atm?.address}</p>
+          {time?.travelTime && <div className={'timeLine'}>
+            Время в пути: {msecToString(time.travelTime)}
+          </div>}
+          {
+            time?.waitingTime && <div className={'timeLine'}>
+            Время ожидания в очереди: {msecToString(time.waitingTime)}
+              </div>
+          }
+          {
+            time?.arrivalTimestamp && <div className={'timeLine'}>
+            Прогнозируемая дата прибытия: {time.arrivalTimestamp.toDateString()}
+              </div>
+          }
           <div className={'divider'}/>
           { <UserTypeButton individual={individual} setIndividual={setIndividual} />}
              {atm?.load && <BarChart title = 'Загруженность банкомата' load={atm?.load}/>}
@@ -211,8 +244,8 @@ export const PopoverATM = ({atm}: { atm: IAtm }) => {
   )
 }
 
-export const Popover = ({ office, atm, travelTime, waitingTime, summaryTime }: IPopoverProps) => {
-  if (office) return (<PopoverOffice office={office}/>)
-  if (atm) return (<PopoverATM atm={atm}/>)
+export const Popover = ({ office, atm, time }: IPopoverProps) => {
+  if (office) return (<PopoverOffice office={office} time={time}/>)
+  if (atm) return (<PopoverATM atm={atm} time={time}/>)
   return null
 };

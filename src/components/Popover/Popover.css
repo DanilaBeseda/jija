@@ -112,3 +112,11 @@
 .invalids{
   margin-left: 10px;
 }
+
+.timeLine {
+  color: #cecece;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
