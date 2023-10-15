@@ -1,6 +1,6 @@
 # Современное решение для банка
 Development
-$ yarn install
-$ yarn dev
+ - yarn install
+ - yarn dev
 Production
-$ yarn install --production
+ - yarn install --production
