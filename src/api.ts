@@ -27,7 +27,8 @@ export const api_osm = {
                 return {
                     nodes: nodes,
                     distance: response.data.routes[0].distance,
-                    duration: response.data.routes[0].duration
+                    duration: response.data.routes[0].duration,
+                    profile: profile
                 }
             })
     }

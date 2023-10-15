@@ -88,7 +88,7 @@ export const Map = ({coords, onAtmClick, onOfficeClick, curRoute, onLeftClick}: 
                         position={[office.latitude, office.longitude]}
                     />
                 ))}
-                {curRoute && <Polyline positions={curRoute.nodes}></Polyline>}
+                {curRoute && <Polyline positions={curRoute.nodes} color={curRoute.profile == 'car' ? '#7bc270' : '#70acc2'}></Polyline>}
                 <OnLeftClick cb={onLeftClick}
                 />
             </MarkerClusterGroup>

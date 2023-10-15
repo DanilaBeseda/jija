@@ -52,9 +52,10 @@ export interface IRoute {
   nodes: [number, number][]
   duration: number
   distance: number
+  profile: TProfiles
 }
 
-export type TProfiles = "car" | "bike" | "foot"
+export type TProfiles = "car" | "foot"
 
 export interface IRanked {
   targetType: TTarget

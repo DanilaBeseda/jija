@@ -65,7 +65,7 @@ export const App = () => {
     setCurAtm(atm);
     setCurOffice(null);
     // todo add selected profile
-    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: atm.latitude, lng: atm.longitude}, 'car').then((route) => setCurRoute(route))
+    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: atm.latitude, lng: atm.longitude}, car ? 'car' : 'foot').then((route) => setCurRoute(route))
   };
 
   const handleOfficeClick = (e: LeafletMouseEvent, bank: IOffice) => {
@@ -73,7 +73,7 @@ export const App = () => {
     setCurOffice(bank);
     setCurAtm(null);
     // todo add selected profile
-    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: bank.latitude, lng: bank.longitude}, 'car').then((route) => setCurRoute(route))
+    api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: bank.latitude, lng: bank.longitude}, car ? 'car' : 'foot').then((route) => setCurRoute(route))
   };
 
   const options = {
