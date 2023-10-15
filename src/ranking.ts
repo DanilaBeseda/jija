@@ -63,7 +63,7 @@ export const rank = async (time: Date,
         if (!bestTravelTimeRanked) {
             bestTravelTimeRanked = ranked
         } else {
-            if (bestTravelTimeRanked.waitingTime > waitingTime) {
+            if (bestTravelTimeRanked.travelTime > travelTime) {
                 bestTravelTimeRanked = ranked
             }
         }
