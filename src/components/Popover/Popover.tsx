@@ -120,6 +120,10 @@ export const PopoverOffice =  ({office}: { office: IOffice }) => {
     setNow(`${now.getHours()}:${now.getMinutes()}`)
   }, [number])
 
+  useEffect(() => {
+    setNumber(undefined)
+  }, [office])
+
   const setOpen = (open: boolean) => {
     setOpenModal(open)
   }
@@ -155,8 +159,15 @@ export const PopoverOffice =  ({office}: { office: IOffice }) => {
                   {`Ваш талон номер: ${number}. Время получения ${now}.`}
                 </div>
           }
-
           <TalonchikModal open={openModal} setOpen={setOpen} setNumber={setNumber} services={officeService}/>
+          {(office.hasRamp) &&  <p className={'Capobility text'}>
+            Специальные возможности
+          </p>}
+          {
+              office.hasRamp && <p className={'invalids text'}>
+                {`- Для маломобильных граждан`}
+              </p>
+          }
         </SimpleBar>
       </div>
   )
@@ -177,6 +188,17 @@ export const PopoverATM = ({atm}: { atm: IAtm }) => {
             individual ? <ServiceList data={atmIndividualService}/> : <ServiceList data={atmService}/>
           }
           <div className={'divider'}/>
+          {(atm.services.blind || atm.services.wheelchair) &&  <p className={'Capobility text'}>
+              Специальные возможности
+            </p>}
+          {atm.services.blind && <p className={'invalids text'}>
+            {`-  Для с людей с ограничениями по зрению`}
+          </p>}
+          {
+            atm.services.wheelchair && <p className={'invalids text'}>
+                {`- Для маломобильных граждан`}
+              </p>
+          }
         </SimpleBar>
       </div>
   )
