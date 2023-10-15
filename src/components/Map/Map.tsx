@@ -51,7 +51,7 @@ export const Map = ({coords, onAtmClick, onOfficeClick, curRoute, onLeftClick}: 
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
             <Marker
                 position={centerPosition}
-                icon={icon({iconUrl: "/public/user.svg"})}
+                icon={icon({iconUrl: "/public/user.svg", iconAnchor: [15, 25]})}
             />
 
             <MarkerClusterGroup
@@ -73,7 +73,7 @@ export const Map = ({coords, onAtmClick, onOfficeClick, curRoute, onLeftClick}: 
                         eventHandlers={{
                             click: (e: LeafletMouseEvent) => onAtmClick(e, atm),
                         }}
-                        icon={icon({iconUrl: "/public/atm.svg"})}
+                        icon={icon({iconUrl: "/public/atm.svg", iconAnchor: [15, 25]})}
                         position={[atm.latitude, atm.longitude]}
                     />
                 ))}
@@ -83,7 +83,7 @@ export const Map = ({coords, onAtmClick, onOfficeClick, curRoute, onLeftClick}: 
                         eventHandlers={{
                             click: (e: LeafletMouseEvent) => onOfficeClick(e, office),
                         }}
-                        icon={icon({iconUrl: "/public/bank_icon.svg"})}
+                        icon={icon({iconUrl: "/public/bank_icon.svg", iconAnchor: [15, 25]})}
                         position={[office.latitude, office.longitude]}
                     />
                 ))}
