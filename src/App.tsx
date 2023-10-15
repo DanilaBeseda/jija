@@ -49,6 +49,12 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
+    curOffice && api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: curOffice.latitude, lng: curOffice.longitude}, car ? 'car' : 'foot').then((route) => {
+      setCurRoute(route)
+    })
+    curAtm && api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: curAtm.latitude, lng: curAtm.longitude}, car ? 'car' : 'foot').then((route) => {
+      setCurRoute(route)
+    })
     coords && rank(new Date(Date.now()),
         {lat: coords[0], lng: coords[1]},
         office ? 'office' :'atm',

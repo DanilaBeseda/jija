@@ -61,7 +61,6 @@ export const Map = ({coords, onAtmClick, onOfficeClick, curRoute, onLeftClick}: 
                 }}
                 maxClusterRadius={80}
                 iconCreateFunction={(cluster: {_childCount: number}) => {
-                    console.log(cluster)
                     return divIcon({
                     html: `<span>${cluster._childCount}</span>`,
                     className: 'custom-marker-cluster',
@@ -88,7 +87,7 @@ export const Map = ({coords, onAtmClick, onOfficeClick, curRoute, onLeftClick}: 
                         position={[office.latitude, office.longitude]}
                     />
                 ))}
-                {curRoute && <Polyline positions={curRoute.nodes} color={curRoute.profile == 'car' ? '#6aff4f' : '#46ddff'}></Polyline>}
+                {curRoute && <Polyline positions={curRoute.nodes} color={curRoute.profile == 'car' ? '#ff984f' : '#46ddff'}></Polyline>}
                 <OnLeftClick cb={onLeftClick}
                 />
             </MarkerClusterGroup>
