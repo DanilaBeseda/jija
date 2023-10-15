@@ -71,22 +71,23 @@ export const App = () => {
           individual ? 'individual' : 'legal'
       ))
     })
-    coords && rank(new Date(Date.now()),
-        {lat: coords[0], lng: coords[1]},
-        office ? 'office' :'atm',
-        individual ? 'individual' : 'legal',
-        car ? 'car' : 'foot',
-        wheel,
-        blind
-        )
-        .then(setRankingResult)
+    if (service != '') {
+      coords && rank(new Date(Date.now()),
+          {lat: coords[0], lng: coords[1]},
+          office ? 'office' :'atm',
+          individual ? 'individual' : 'legal',
+          car ? 'car' : 'foot',
+          wheel,
+          blind
+      )
+          .then(setRankingResult)
+    }
   }, [coords, individual, office, car, service, blind, wheel])
 
   const handleAtmClick = (e: LeafletMouseEvent, atm: IAtm) => {
     e?.originalEvent.stopPropagation();
     setCurAtm(atm);
     setCurOffice(null);
-    // todo add selected profile
     api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: atm.latitude, lng: atm.longitude}, car ? 'car' : 'foot')
         .then((route) => {
           setCurRoute(route)
@@ -104,7 +105,6 @@ export const App = () => {
     e?.originalEvent.stopPropagation();
     setCurOffice(bank);
     setCurAtm(null);
-    // todo add selected profile
     api_osm.buildRoute({lat: coords[0], lng: coords[1]}, {lat: bank.latitude, lng: bank.longitude}, car ? 'car' : 'foot')
         .then((route) => {
           setCurRoute(route)
