@@ -39,3 +39,18 @@
     color: #cecece;
     user-select: none;
 }
+
+.buttonTravel {
+    color: #FFF;
+    user-select: none;
+    background: #42429b;
+    cursor: pointer;
+    padding: 5px;
+    margin-top: 10px;
+}
+.travelTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #cecece;
+}

@@ -10,7 +10,6 @@ import { LeafletMouseEvent } from "leaflet";
 import {api_osm} from "./api.ts";
 import {rank} from "./ranking.ts";
 import {SearchPopover} from "./components/SearchPopover/SearchPopover.tsx";
-import {officeIndividualService} from "./config.ts";
 
 const theme = createTheme({
   palette: {},
@@ -108,7 +107,7 @@ export const App = () => {
           />
         )}
         {(curAtm || curOffice) && <Popover atm={curAtm} office={curOffice} />}
-        <SearchPopover />
+        <SearchPopover blind={blind} wheel={wheel} setWheel={setWheel} car={car} setCar={setCar} rankingResult={rankingResult} office={office} setOffice={setOffice}  setBlind={setBlind} setIndividual={setIndividual} setService={setService} service={service} individual ={individual}/>
       </div>
     </ThemeProvider>
   );

@@ -1,11 +1,28 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import './SearchPopover.css'
 import cn from "classnames";
 import {atmIndividualService, atmService, officeIndividualService, officeService} from "../../config.ts";
 import {ServiceModal} from "./ServiceModal.tsx";
 import Checkbox from '@mui/material/Checkbox';
-interface ISearchPopoverProps {
+import {IRankingResult} from "../../types.ts";
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 
+
+interface ISearchPopoverProps {
+    individual:boolean
+    setIndividual: ( individual:boolean) => void
+    office: boolean
+    setOffice: (office: boolean) => void
+    car: boolean
+    setCar: (car: boolean) => void
+    service: string
+    setService: (service: string) => void
+    blind: boolean
+    setBlind: (blind: boolean) => void
+    wheel: boolean
+    setWheel: (wheel: boolean) => void
+    rankingResult: IRankingResult | null
 }
 
 interface IUserTypeButtonProps {
@@ -69,16 +86,9 @@ const UserRadioButton = ({individual, setIndividual}: IUserTypeButtonProps  ) =>
     </div>)
 }
 
-export const SearchPopover = ({}: ISearchPopoverProps) => {
-    const [individual, setIndividual] = useState(true)
-    const [office, setOffice] = useState(true)
-    const [car, setCar] = useState(false)
-    const [service, setService] = useState("")
+export const SearchPopover = ({car, setCar, blind, setBlind, rankingResult, wheel, setWheel, individual, setIndividual, service, setService, setOffice, office}: ISearchPopoverProps) => {
     const [serviceList, setServiceList] = useState<string[]>(officeIndividualService)
     const [openModal, setOpenModal] = useState(false)
-
-    const [blind, setBlind] = useState(false)
-    const [wheel, setWheel] = useState(false)
 
     useEffect(() => {
         if (individual && office) setServiceList(officeIndividualService)
@@ -87,8 +97,18 @@ export const SearchPopover = ({}: ISearchPopoverProps) => {
         if (!individual && !office) setServiceList(atmService)
     }, [individual, office]);
 
+    function msecToString(val: number) {
+        var mins = Math.round(val / 60000);
+        const hours = Math.floor(mins / 60);
+        mins %= 60;
+        if (mins < 10)
+            mins = '0' + mins;
+        return hours + 'ч. ' + mins + 'мин.';
+    }
+
     return (
         <div className={'searchPopover'}>
+            <SimpleBar style={{ maxHeight: '100%', display: 'flex' }}>
             <p className={'text generalTitle'}>
                Поиск маршрута.
             </p>
@@ -111,7 +131,32 @@ export const SearchPopover = ({}: ISearchPopoverProps) => {
                 <Checkbox defaultChecked value={wheel} onChange={(event, checked) => {setWheel(checked)}}/>
                 Для маломобильных граждан
             </div>
-
+            <div className={'divider'}/>
+            <div className={'travelTitle'}>
+                Лучшие варианты
+            </div>
+            {
+                rankingResult?.bestTravelTime && <div className={'buttonTravel'}>
+                    {`Дорога с наименьшим временем пути: ${msecToString(rankingResult.bestTravelTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestTravelTime.summaryTime)}.` }
+                </div>
+            }
+            {
+                rankingResult?.bestWaitingTime && <div className={'buttonTravel'}>
+                    {`Дорога с наименьшим временем ожидания очереди: ${msecToString(rankingResult.bestWaitingTime.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(rankingResult.bestWaitingTime.summaryTime)}.` }
+                </div>
+            }
+            <div className={'divider'}/>
+            <div className={'travelTitle'}>
+                Топ вариантов с минимальным сумарным временем.
+            </div>
+            {
+                rankingResult?.top && rankingResult.top.map((r) =>
+                    <div className={'buttonTravel'}>
+                        {`Дорога с наименьшим временем ожидания очереди: ${msecToString(r.travelTime)}. Общее время на дорогу и ожидание: ${msecToString(r.summaryTime)}.` }
+                    </div>
+                )
+            }
+            </SimpleBar>
         </div>
     )
 }
